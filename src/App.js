@@ -25,13 +25,11 @@ function init() {
   renderer = new WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  // renderer.outputEncoding = THREE.sRGBEncoding;
   document.getElementById("3d-glob").appendChild(renderer.domElement);
 
   // Initialize scene, light
   scene = new Scene();
   scene.add(new AmbientLight(0xbbbbbb, 0.3));
-  scene.background = new Color(0x040d21);
 
   // Initialize camera, light
   camera = new PerspectiveCamera();
@@ -95,8 +93,8 @@ function initGlobe() {
     .hexPolygonsData(countries.features)
     .hexPolygonResolution(3)
     .hexPolygonMargin(0.7)
-    .showAtmosphere(true)
-    .atmosphereColor("#3a228a")
+    .showAtmosphere(false)
+    // .atmosphereColor("red")
     .atmosphereAltitude(0.25)
     .hexPolygonColor((e) => {
       if (
@@ -112,7 +110,7 @@ function initGlobe() {
   setTimeout(() => {
     Globe.arcsData(travelHistory.flights)
       .arcColor((e) => {
-        return e.status ? "#9cff00" : "#FF4000";
+        return e.status ? "#09C4A2" : "#B3ABB8";
       })
       .arcAltitude((e) => {
         return e.arcAlt;
@@ -120,38 +118,26 @@ function initGlobe() {
       .arcStroke((e) => {
         return e.status ? 0.5 : 0.3;
       })
-      .arcDashLength(0.9)
+      .arcDashLength(0.5)
       .arcDashGap(4)
       .arcDashAnimateTime(1000)
       .arcsTransitionDuration(1000)
       .arcDashInitialGap((e) => e.order * 1)
       .labelsData(airportHistory.airports)
       .labelColor(() => "#ffcb21")
-      .labelDotOrientation((e) => {
-        return e.text === "ALA" ? "top" : "right";
-      })
-      .labelDotRadius(0.3)
       .labelSize((e) => e.size)
       .labelText("city")
       .labelResolution(6)
-      .labelAltitude(0.01)
-      .pointsData(airportHistory.airports)
-      .pointColor(() => "#ffffff")
-      .pointsMerge(true)
-      .pointAltitude(0.07)
-      .pointRadius(0.05);
+      .labelAltitude(0.03)
+      .labelIncludeDot(false)
   }, 1000);
 
-  Globe.rotateY(-Math.PI * (5 / 9));
-  Globe.rotateZ(-Math.PI / 6);
+
   const globeMaterial = Globe.globeMaterial();
-  globeMaterial.color = new Color(0x3a228a);
   globeMaterial.emissive = new Color(0x220038);
   globeMaterial.emissiveIntensity = 0.1;
   globeMaterial.shininess = 0.7;
-
-  // NOTE Cool stuff
-  // globeMaterial.wireframe = true;
+  globeMaterial.wireframe = true;
 
   scene.add(Globe);
 }
