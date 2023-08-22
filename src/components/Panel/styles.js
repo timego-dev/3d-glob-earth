@@ -13,9 +13,9 @@ export const panelStyle = {
   border: '1px solid transparent',
 
   backgroundImage:
-    'linear-gradient(to bottom right, #222222bf, transparent), ' +
-    'linear-gradient(to bottom right, transparent, black), ' +
-    'linear-gradient(to bottom right, rgba(216, 180, 253, 1), rgba(216, 180, 253, 0))',
+    'linear-gradient(to bottom right, #382358, transparent), ' +
+    'linear-gradient(to bottom right, transparent, #0000000f), ' +
+    'linear-gradient(to bottom right, rgb(209 166 255 / 63%), rgba(216, 180, 253, 0))',
 
   backgroundClip: 'padding-box, padding-box, border-box',
 
