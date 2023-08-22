@@ -1,18 +1,24 @@
 import ThreeGlobe from 'three-globe'
-import { WebGLRenderer, Scene } from 'three'
 import {
+  WebGLRenderer,
+  Scene,
   PerspectiveCamera,
   AmbientLight,
   DirectionalLight,
-  Color,
   Fog,
+  Color,
   PointLight,
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import countries from './assets/globe-data-min.json'
 import travelHistory from './assets/my-flights.json'
 import airportHistory from './assets/my-airports.json'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { chakra, VStack } from '@chakra-ui/react'
+import { panelStyle } from './components/Panel/styles'
+import Panel from './components/Panel'
+import { DEFAULT_LOCATION } from './const'
+import { globStyle } from './style'
 
 var renderer, camera, scene, controls
 let mouseX = 0
@@ -23,7 +29,10 @@ var Globe
 
 function init() {
   // Initialize renderer
-  renderer = new WebGLRenderer({ antialias: true })
+  renderer = new WebGLRenderer({ antialias: true, alpha: true })
+
+  renderer.setClearColor(0x000000, 0)
+
   renderer.setPixelRatio(window.devicePixelRatio)
   renderer.setSize(window.innerWidth, window.innerHeight)
 
@@ -31,6 +40,7 @@ function init() {
 
   // Initialize scene, light
   scene = new Scene()
+  // scene.background = new Color('transparent')
   scene.add(new AmbientLight(0xbbbbbb, 0.3))
 
   // Initialize camera, light
@@ -170,6 +180,8 @@ function animate() {
 }
 
 function App() {
+  const [location, setLocation] = useState({ ...DEFAULT_LOCATION })
+
   useEffect(() => {
     init()
     initGlobe()
@@ -182,9 +194,15 @@ function App() {
     }
   }, [])
 
+  const hdChangeLocation = (key, value) => {
+    setLocation((prev) => ({ ...prev, [key]: value }))
+  }
+
   return (
-    <div>
-      <div id='3d-glob'></div>
+    <div className='container'>
+      <chakra.div {...globStyle} id='3d-glob' />
+
+      <Panel location={location} onLocationChange={hdChangeLocation} />
     </div>
   )
 }
