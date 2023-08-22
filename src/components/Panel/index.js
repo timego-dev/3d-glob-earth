@@ -14,17 +14,17 @@ Panel.propTypes = {
 function Panel(props) {
   const regionNotSelected = useMemo(
     () => !props.location?.[locationAlias.reg],
-    [props.location?.[locationAlias.reg]],
+    [props.location],
   )
 
   const cityNotSelected = useMemo(
     () => !props.location?.[locationAlias.ct],
-    [props.location?.[locationAlias.ct]],
+    [props.location],
   )
 
   const connectNotSelected = useMemo(
     () => !props.location?.[locationAlias.con],
-    [props.location?.[locationAlias.con]],
+    [props.location],
   )
 
   return (

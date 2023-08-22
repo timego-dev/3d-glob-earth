@@ -1,21 +1,20 @@
 import ThreeGlobe from 'three-globe'
 import {
-  WebGLRenderer,
-  Scene,
-  PerspectiveCamera,
   AmbientLight,
+  Color,
   DirectionalLight,
   Fog,
-  Color,
+  PerspectiveCamera,
   PointLight,
+  Scene,
+  WebGLRenderer,
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import countries from './assets/globe-data-min.json'
 import travelHistory from './assets/my-flights.json'
 import airportHistory from './assets/my-airports.json'
 import { useEffect, useState } from 'react'
-import { chakra, VStack } from '@chakra-ui/react'
-import { panelStyle } from './components/Panel/styles'
+import { chakra } from '@chakra-ui/react'
 import Panel from './components/Panel'
 import { DEFAULT_LOCATION } from './const'
 import { globStyle } from './style'
