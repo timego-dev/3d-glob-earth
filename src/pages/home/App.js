@@ -10,19 +10,21 @@ import {
   WebGLRenderer,
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import countries from './assets/globe-data-min.json'
-import travelHistory from './assets/my-flights.json'
-import airportHistory from './assets/my-airports.json'
+import countries from '../../assets/globe-data-min.json'
+import travelHistory from '../../assets/my-flights.json'
+import airportHistory from '../../assets/my-airports.json'
 import { useEffect, useState } from 'react'
 import { Button, chakra, HStack } from '@chakra-ui/react'
 import Panel from './components/Panel'
-import { DEFAULT_LOCATION } from './const'
+import { DEFAULT_LOCATION } from './constants/const'
 import {
   globStyle,
   blurringBlueStyle,
   navButtonStyle,
   navbarStyle,
-} from './style'
+} from './constants/style'
+import RadioIcon from './components/Circle'
+import typeFaceFutura from '../../assets/Futuratf.json'
 
 var renderer, camera, scene, controls
 // let mouseX = 0
@@ -143,8 +145,9 @@ function initGlobe() {
       .arcsTransitionDuration(1000)
       .arcDashInitialGap((e) => e.order * 1)
       .labelsData(airportHistory.airports)
-      .labelColor(() => '#ffcb21')
+      .labelColor(() => 'rgba(250, 246, 254, 1)')
       .labelSize((e) => e.size)
+      .labelTypeFace(typeFaceFutura)
       .labelText('city')
       .labelResolution(6)
       .labelAltitude(0.03)
@@ -217,9 +220,11 @@ function App() {
           All location
         </Button>
         <Button {...navButtonStyle} w='173px' variant='ghost'>
+          <RadioIcon checked />
           Active location
         </Button>
         <Button {...navButtonStyle} w='185px' variant='ghost'>
+          <RadioIcon />
           Planned location
         </Button>
       </HStack>

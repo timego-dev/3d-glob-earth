@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Heading, Text, VStack } from '@chakra-ui/react'
 import { REGION_LABELS, REGIONS } from '../const'
-import { locationAlias } from '../../../const'
+import { locationAlias } from '../../../constants/const'
 import { regionButtonStyle } from '../styles'
 
 Overview.propTypes = {
