@@ -1,11 +1,12 @@
 export const globStyle = {
-  position: 'relative',
-  zIndex: 10,
+  position: 'absolute',
+  zIndex: 2,
+  right: '-400px',
 }
 
 export const blurringBlueStyle = {
   position: 'absolute',
-  top: '8vh',
+  top: '20vh',
   right: '12vw',
 
   width: '600px',

@@ -18,15 +18,15 @@ import { Button, chakra, HStack } from '@chakra-ui/react'
 import Panel from './components/Panel'
 import { DEFAULT_LOCATION } from './constants/const'
 import {
-  globStyle,
   blurringBlueStyle,
-  navButtonStyle,
+  globStyle,
   navbarStyle,
+  navButtonStyle,
 } from './constants/style'
 import RadioIcon from './components/Circle'
-import typeFaceFutura from '../../assets/Futuratf.json'
+import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer'
 
-var renderer, camera, scene, controls
+var renderer, cssRenderer, camera, scene, controls
 // let mouseX = 0
 // let mouseY = 0
 // let windowHalfX = window.innerWidth / 2
@@ -35,7 +35,7 @@ var Globe
 
 function init() {
   // Initialize renderer
-  renderer = new WebGLRenderer({ antialias: true, alpha: true })
+  renderer = new WebGLRenderer({ antialias: true })
 
   renderer.setClearColor(0x000000, 0)
 
@@ -43,6 +43,15 @@ function init() {
   renderer.setSize(window.innerWidth, window.innerHeight)
 
   document.getElementById('3d-glob').appendChild(renderer.domElement)
+
+  cssRenderer = new CSS2DRenderer()
+
+  cssRenderer.setSize(window.innerWidth, window.innerHeight)
+  cssRenderer.domElement.style.position = 'absolute'
+  cssRenderer.domElement.style.top = '0px'
+  cssRenderer.domElement.style.pointerEvents = 'none'
+
+  document.getElementById('3d-glob').appendChild(cssRenderer.domElement)
 
   // Initialize scene, light
   scene = new Scene()
@@ -91,7 +100,7 @@ function init() {
   controls.dynamicDampingFactor = 0.01
   controls.enablePan = false
   controls.minDistance = 200
-  controls.maxDistance = 500
+  controls.maxDistance = 400
   controls.rotateSpeed = 0.8
   controls.zoomSpeed = 1
   controls.autoRotate = false
@@ -103,6 +112,20 @@ function init() {
   // document.addEventListener('mousemove', onMouseMove)
 }
 
+const renderAirport = (name) => {
+  return `<div
+   style="color: #FAF6FE;
+   background: #ffffff29;
+   line-height: 27px;
+   font-family: Futura Round Medium;
+   padding: 0 24px;
+   border-radius: 40px;
+   font-size: 16px;
+   border: 1px solid rgba(159, 115, 202, 0.5)">
+   ${name}
+   </div>`
+}
+
 // SECTION Globe
 function initGlobe() {
   // Initialize the Globe
@@ -110,6 +133,12 @@ function initGlobe() {
     waitForGlobeReady: true,
     animateIn: true,
   })
+    .htmlElementsData(airportHistory.airports)
+    .htmlElement((d) => {
+      const el = document.createElement('div')
+      el.innerHTML = renderAirport(d.city)
+      return el
+    })
     .showGlobe(false)
     .hexPolygonsData(countries.features)
     .hexPolygonResolution(3)
@@ -144,14 +173,12 @@ function initGlobe() {
       .arcDashAnimateTime(1000)
       .arcsTransitionDuration(1000)
       .arcDashInitialGap((e) => e.order * 1)
-      .labelsData(airportHistory.airports)
-      .labelColor(() => 'rgba(250, 246, 254, 1)')
-      .labelSize((e) => e.size)
-      .labelTypeFace(typeFaceFutura)
-      .labelText('city')
-      .labelResolution(6)
-      .labelAltitude(0.03)
-      .labelIncludeDot(false)
+
+      .pointsData(airportHistory.airports)
+      .pointColor(() => 'aqua')
+      .pointAltitude(0.07)
+      .pointsMerge(true)
+      .pointRadius(0.03)
   }, 1000)
 
   const globeMaterial = Globe.globeMaterial()
@@ -160,9 +187,9 @@ function initGlobe() {
   globeMaterial.shininess = 0.7
   globeMaterial.wireframe = true
 
-  scene.add(Globe)
+  // Globe.position.set(80, 0, 0)
 
-  // scene.children[scene.children?.length - 1].position.set(80, 0, 0)
+  scene.add(Globe)
 }
 
 // function onMouseMove(event) {
@@ -187,7 +214,10 @@ function animate() {
   // camera.position.y += (-mouseY / 2 - camera.position.y) * 0.005
   camera.lookAt(scene.position)
   controls.update()
-  renderer.render(scene, camera)
+
+  let renderers = [renderer, cssRenderer]
+  renderers.forEach((r) => r.render(scene, camera))
+
   requestAnimationFrame(animate)
 }
 
