@@ -14,10 +14,15 @@ import countries from './assets/globe-data-min.json'
 import travelHistory from './assets/my-flights.json'
 import airportHistory from './assets/my-airports.json'
 import { useEffect, useState } from 'react'
-import { chakra } from '@chakra-ui/react'
+import { Button, chakra, HStack } from '@chakra-ui/react'
 import Panel from './components/Panel'
 import { DEFAULT_LOCATION } from './const'
-import { globStyle, blurringBlueStyle } from './style'
+import {
+  globStyle,
+  blurringBlueStyle,
+  navButtonStyle,
+  navbarStyle,
+} from './style'
 
 var renderer, camera, scene, controls
 let mouseX = 0
@@ -154,7 +159,7 @@ function initGlobe() {
 
   scene.add(Globe)
 
-  scene.children[scene.children?.length - 1].position.set(80, 0, 0)
+  // scene.children[scene.children?.length - 1].position.set(80, 0, 0)
 }
 
 function onMouseMove(event) {
@@ -172,11 +177,11 @@ function onWindowResize() {
 }
 
 function animate() {
-  camera.position.x +=
-    Math.abs(mouseX) <= windowHalfX / 2
-      ? (mouseX / 2 - camera.position.x) * 0.005
-      : 0
-  camera.position.y += (-mouseY / 2 - camera.position.y) * 0.005
+  // camera.position.x +=
+  //   Math.abs(mouseX) <= windowHalfX / 2
+  //     ? (mouseX / 2 - camera.position.x) * 0.005
+  //     : 0
+  // camera.position.y += (-mouseY / 2 - camera.position.y) * 0.005
   camera.lookAt(scene.position)
   controls.update()
   renderer.render(scene, camera)
@@ -206,6 +211,18 @@ function App() {
     <div className='container'>
       <chakra.div {...globStyle} id='3d-glob' />
       <chakra.div {...blurringBlueStyle} />
+
+      <HStack {...navbarStyle}>
+        <Button {...navButtonStyle} w='127px' variant='ghost'>
+          All location
+        </Button>
+        <Button {...navButtonStyle} w='173px' variant='ghost'>
+          Active location
+        </Button>
+        <Button {...navButtonStyle} w='185px' variant='ghost'>
+          Planned location
+        </Button>
+      </HStack>
 
       <Panel location={location} onLocationChange={hdChangeLocation} />
     </div>
