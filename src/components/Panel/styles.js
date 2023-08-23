@@ -1,7 +1,8 @@
 export const panelStyle = {
   color: 'white',
   position: 'absolute',
-  bottom: '64px',
+  zIndex: 99,
+  top: '64px',
   left: '64px',
   padding: '50px',
   borderRadius: '16px',
@@ -36,9 +37,8 @@ export const regionButtonStyle = {
   fontSize: '18px',
   border: '1px solid transparent',
   background:
-    'linear-gradient(to bottom right, #1a1122ad, transparent) padding-box, ' +
-    'linear-gradient(to bottom right, transparent, #332946d6) padding-box, ' +
-    'linear-gradient(to right, rgba(216, 180, 253, 0.7), rgba(216, 180, 253, 0.2)) border-box',
+    'linear-gradient(#00000075, #00000075) padding-box, ' +
+    'linear-gradient(to right, rgb(216 180 253 / 58%), rgb(216 180 253 / 68%)) border-box',
   color: '#FAF6FE',
   w: '100%',
   _hover: {
