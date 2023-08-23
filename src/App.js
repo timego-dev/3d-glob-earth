@@ -25,10 +25,10 @@ import {
 } from './style'
 
 var renderer, camera, scene, controls
-let mouseX = 0
-let mouseY = 0
-let windowHalfX = window.innerWidth / 2
-let windowHalfY = window.innerHeight / 2
+// let mouseX = 0
+// let mouseY = 0
+// let windowHalfX = window.innerWidth / 2
+// let windowHalfY = window.innerHeight / 2
 var Globe
 
 function init() {
@@ -98,7 +98,7 @@ function init() {
   controls.maxPolarAngle = Math.PI - Math.PI / 3
 
   window.addEventListener('resize', onWindowResize, false)
-  document.addEventListener('mousemove', onMouseMove)
+  // document.addEventListener('mousemove', onMouseMove)
 }
 
 // SECTION Globe
@@ -162,17 +162,17 @@ function initGlobe() {
   // scene.children[scene.children?.length - 1].position.set(80, 0, 0)
 }
 
-function onMouseMove(event) {
-  mouseX = event.clientX - windowHalfX
-  mouseY = event.clientY - windowHalfY
-  // console.log("x: " + mouseX + " y: " + mouseY);
-}
+// function onMouseMove(event) {
+//   mouseX = event.clientX - windowHalfX
+//   mouseY = event.clientY - windowHalfY
+// console.log("x: " + mouseX + " y: " + mouseY);
+// }
 
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight
   camera.updateProjectionMatrix()
-  windowHalfX = window.innerWidth / 1.5
-  windowHalfY = window.innerHeight / 1.5
+  // windowHalfX = window.innerWidth / 1.5
+  // windowHalfY = window.innerHeight / 1.5
   renderer.setSize(window.innerWidth, window.innerHeight)
 }
 
