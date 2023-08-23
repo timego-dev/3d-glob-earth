@@ -13,9 +13,14 @@ export const panelStyle = {
   border: '1px solid transparent',
 
   backgroundImage:
-    'linear-gradient(to bottom right, #382358, transparent), ' +
-    'linear-gradient(to bottom right, transparent, #0000000f), ' +
-    'linear-gradient(to bottom right, rgb(209 166 255 / 63%), rgba(216, 180, 253, 0))',
+    'linear-gradient(to top, #2e29468a, #290c4c61), ' +
+    'linear-gradient(to bottom right, #18041e66, #00000026), ' +
+    'linear-gradient(to bottom right, rgb(215 179 255 / 62%), rgba(216, 180, 253, 0))',
+
+  // backgroundImage:
+  //   'linear-gradient(to top, #2e29468a, #1d073854), ' +
+  //   'linear-gradient(to bottom right, #18041e66, #0000000f), ' +
+  //   'linear-gradient(to bottom right, rgb(215 179 255 / 52%), rgba(216, 180, 253, 0))',
 
   backgroundClip: 'padding-box, padding-box, border-box',
 

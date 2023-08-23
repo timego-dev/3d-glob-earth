@@ -17,7 +17,7 @@ import { useEffect, useState } from 'react'
 import { chakra } from '@chakra-ui/react'
 import Panel from './components/Panel'
 import { DEFAULT_LOCATION } from './const'
-import { globStyle } from './style'
+import { globStyle, blurringBlueStyle } from './style'
 
 var renderer, camera, scene, controls
 let mouseX = 0
@@ -63,6 +63,8 @@ function init() {
   camera.position.x = 0
   camera.position.y = 0
 
+  camera.zoom = 1.7
+
   scene.add(camera)
 
   // Additional effects
@@ -101,6 +103,7 @@ function initGlobe() {
     waitForGlobeReady: true,
     animateIn: true,
   })
+    .showGlobe(false)
     .hexPolygonsData(countries.features)
     .hexPolygonResolution(3)
     .hexPolygonMargin(0.7)
@@ -121,7 +124,7 @@ function initGlobe() {
   setTimeout(() => {
     Globe.arcsData(travelHistory.flights)
       .arcColor((e) => {
-        return e.status ? '#09C4A2' : '#B3ABB8'
+        return e.status ? 'rgba(9, 196, 162, 1)' : 'rgba(179, 171, 184, 1)'
       })
       .arcAltitude((e) => {
         return e.arcAlt
@@ -150,6 +153,8 @@ function initGlobe() {
   globeMaterial.wireframe = true
 
   scene.add(Globe)
+
+  scene.children[scene.children?.length - 1].position.set(80, 0, 0)
 }
 
 function onMouseMove(event) {
@@ -200,6 +205,7 @@ function App() {
   return (
     <div className='container'>
       <chakra.div {...globStyle} id='3d-glob' />
+      <chakra.div {...blurringBlueStyle} />
 
       <Panel location={location} onLocationChange={hdChangeLocation} />
     </div>
