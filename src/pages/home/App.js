@@ -261,6 +261,7 @@ function animate() {
 
 function App() {
   const [location, setLocation] = useState({ ...DEFAULT_LOCATION })
+  const [nav, setNav] = useState('all')
 
   useEffect(() => {
     init()
@@ -284,16 +285,34 @@ function App() {
       <chakra.div {...blurringBlueStyle} />
 
       <HStack {...navbarStyle}>
-        <Button {...navButtonStyle} w='127px' variant='ghost'>
-          All location
+        <Button
+          {...navButtonStyle}
+          bg={nav === 'all' ? 'rgba(81, 36, 117, 1)' : 'transparent'}
+          onClick={() => setNav('all')}
+          w='127px'
+          variant='ghost'
+        >
+          All locations
         </Button>
-        <Button {...navButtonStyle} w='173px' variant='ghost'>
+        <Button
+          {...navButtonStyle}
+          bg={nav === 'active' ? 'rgba(81, 36, 117, 1)' : 'transparent'}
+          onClick={() => setNav('active')}
+          w='173px'
+          variant='ghost'
+        >
           <RadioIcon checked />
-          Active location
+          Active locations
         </Button>
-        <Button {...navButtonStyle} w='185px' variant='ghost'>
+        <Button
+          {...navButtonStyle}
+          bg={nav === 'planned' ? 'rgba(81, 36, 117, 1)' : 'transparent'}
+          onClick={() => setNav('planned')}
+          w='185px'
+          variant='ghost'
+        >
           <RadioIcon />
-          Planned location
+          Planned locations
         </Button>
       </HStack>
 
