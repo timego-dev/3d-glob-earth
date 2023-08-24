@@ -1,11 +1,16 @@
 import ThreeGlobe from 'three-globe'
 import {
   AmbientLight,
+  CircleGeometry,
   Color,
   DirectionalLight,
+  DoubleSide,
   Fog,
+  Mesh,
+  MeshBasicMaterial,
   PerspectiveCamera,
   PointLight,
+  RingGeometry,
   Scene,
   WebGLRenderer,
 } from 'three'
@@ -48,7 +53,7 @@ function init() {
 
   cssRenderer.setSize(window.innerWidth, window.innerHeight)
   cssRenderer.domElement.style.position = 'absolute'
-  cssRenderer.domElement.style.top = '0px'
+  cssRenderer.domElement.style.top = '-32px'
   cssRenderer.domElement.style.pointerEvents = 'none'
 
   document.getElementById('3d-glob').appendChild(cssRenderer.domElement)
@@ -76,8 +81,8 @@ function init() {
   camera.add(dLight2)
 
   camera.position.z = 400
-  camera.position.x = 0
-  camera.position.y = 0
+  camera.position.x = 20000
+  camera.position.y = 5000
 
   camera.zoom = 1.7
 
@@ -133,13 +138,15 @@ function initGlobe() {
     waitForGlobeReady: true,
     animateIn: true,
   })
+    .showGlobe(false)
+
     .htmlElementsData(airportHistory.airports)
     .htmlElement((d) => {
       const el = document.createElement('div')
       el.innerHTML = renderAirport(d.city)
       return el
     })
-    .showGlobe(false)
+
     .hexPolygonsData(countries.features)
     .hexPolygonResolution(3)
     .hexPolygonMargin(0.7)
@@ -154,6 +161,39 @@ function initGlobe() {
       ) {
         return 'rgba(255,255,255, 1)'
       } else return 'rgba(255,255,255, 0.7)'
+    })
+
+    .customLayerData(airportHistory.airports)
+    .customThreeObject((d) => {
+      let circle = new Mesh(
+        new CircleGeometry(d.isInactive ? 0.4 : 0.6)
+          .translate(0, 0, 1.01)
+          .rotateX(Math.PI),
+        new MeshBasicMaterial({ color: '#00FECD', side: DoubleSide }),
+      )
+
+      const ringInner = d.isInactive ? 1.4 : 0.6
+      const ringOuter = 1.5
+
+      const ring = new Mesh(
+        new RingGeometry(ringInner, ringOuter)
+          .translate(0, 0, 1)
+          .rotateX(Math.PI),
+        new MeshBasicMaterial({
+          color: 'rgba(4, 164, 135, 0.5)',
+          side: DoubleSide,
+        }),
+      )
+
+      circle.add(ring)
+      ring.lookAt(0, 0, 0)
+
+      return circle
+    })
+    .customThreeObjectUpdate((obj, d) => {
+      Object.assign(obj.position, Globe.getCoords(d.lat, d.lng, d.alt))
+
+      obj.lookAt(0, 0, 0)
     })
 
   // NOTE Arc animations are followed after the globe enters the scene
@@ -174,11 +214,11 @@ function initGlobe() {
       .arcsTransitionDuration(1000)
       .arcDashInitialGap((e) => e.order * 1)
 
-      .pointsData(airportHistory.airports)
-      .pointColor(() => 'aqua')
-      .pointAltitude(0.07)
-      .pointsMerge(true)
-      .pointRadius(0.03)
+    // .pointsData(airportHistory.airports)
+    // .pointColor(() => 'aqua')
+    // .pointAltitude(0.07)
+    // .pointsMerge(true)
+    // .pointRadius(0.03)
   }, 1000)
 
   const globeMaterial = Globe.globeMaterial()
@@ -186,8 +226,6 @@ function initGlobe() {
   globeMaterial.emissiveIntensity = 0.1
   globeMaterial.shininess = 0.7
   globeMaterial.wireframe = true
-
-  // Globe.position.set(80, 0, 0)
 
   scene.add(Globe)
 }
