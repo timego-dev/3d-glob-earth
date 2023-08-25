@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { panelStyle } from './styles'
 import { VStack } from '@chakra-ui/react'
 import Overview from './components/Overview'
-import { locationAlias } from '../../const'
+import { locationAlias } from '../../constants/const'
 import City from './components/City'
 
 Panel.propTypes = {

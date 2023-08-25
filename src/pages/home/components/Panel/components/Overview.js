@@ -2,14 +2,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Heading, Text, VStack } from '@chakra-ui/react'
 import { REGION_LABELS, REGIONS } from '../const'
-import { locationAlias } from '../../../const'
 import { regionButtonStyle } from '../styles'
 
 Overview.propTypes = {
   onLocationChange: PropTypes.func,
 }
 
-function Overview(props) {
+function Overview() {
   return (
     <>
       <VStack align='flex-start'>
@@ -55,7 +54,7 @@ function Overview(props) {
           <Button
             {...regionButtonStyle}
             key={reg}
-            onClick={() => props.onLocationChange(locationAlias.reg, reg)}
+            // onClick={() => props.onLocationChange(locationAlias.reg, reg)}
           >
             {REGION_LABELS[reg]?.label}
           </Button>

@@ -11,6 +11,7 @@
     },
     {
       "text": "TAS",
+      "isInactive": true,
       "size": 1.0,
       "country": "Uzbekistan",
       "city": "Tashkent",
@@ -36,6 +37,7 @@
     {
       "text": "KJA",
       "size": 1.0,
+      "isInactive": true,
       "country": "Russia",
       "city": "Krasnoyarsk",
       "lat": "56.05",
@@ -55,6 +57,7 @@
       "country": "Malaysia",
       "city": "Kuala-Lumpur",
       "lat": "3.11666666666",
+      "isInactive": true,
       "lng": "101.7"
     },
     {
@@ -75,19 +78,12 @@
     },
     {
       "text": "DMK",
+      "isInactive": true,
       "size": 1.0,
       "country": "Thailand",
       "city": "Bangkok",
       "lat": "13.9255",
       "lng": "100.5923"
-    },
-    {
-      "text": "BKK",
-      "size": 1.0,
-      "country": "Thailand",
-      "city": "",
-      "lat": "13.6900",
-      "lng": "100.7501"
     }
   ]
 }

@@ -1,30 +1,37 @@
 import ThreeGlobe from 'three-globe'
 import {
   AmbientLight,
+  CircleGeometry,
   Color,
   DirectionalLight,
+  DoubleSide,
   Fog,
+  Mesh,
+  MeshBasicMaterial,
   PerspectiveCamera,
   PointLight,
+  RingGeometry,
   Scene,
   WebGLRenderer,
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import countries from './assets/globe-data-min.json'
-import travelHistory from './assets/my-flights.json'
-import airportHistory from './assets/my-airports.json'
+import countries from '../../assets/globe-data-min.json'
+import travelHistory from '../../assets/my-flights.json'
+import airportHistory from '../../assets/my-airports.json'
 import { useEffect, useState } from 'react'
 import { Button, chakra, HStack } from '@chakra-ui/react'
 import Panel from './components/Panel'
-import { DEFAULT_LOCATION } from './const'
+import { DEFAULT_LOCATION } from './constants/const'
 import {
-  globStyle,
   blurringBlueStyle,
-  navButtonStyle,
+  globStyle,
   navbarStyle,
-} from './style'
+  navButtonStyle,
+} from './constants/style'
+import RadioIcon from './components/Circle'
+import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer'
 
-var renderer, camera, scene, controls
+var renderer, cssRenderer, camera, scene, controls
 // let mouseX = 0
 // let mouseY = 0
 // let windowHalfX = window.innerWidth / 2
@@ -33,7 +40,7 @@ var Globe
 
 function init() {
   // Initialize renderer
-  renderer = new WebGLRenderer({ antialias: true, alpha: true })
+  renderer = new WebGLRenderer({ antialias: true })
 
   renderer.setClearColor(0x000000, 0)
 
@@ -41,6 +48,15 @@ function init() {
   renderer.setSize(window.innerWidth, window.innerHeight)
 
   document.getElementById('3d-glob').appendChild(renderer.domElement)
+
+  cssRenderer = new CSS2DRenderer()
+
+  cssRenderer.setSize(window.innerWidth, window.innerHeight)
+  cssRenderer.domElement.style.position = 'absolute'
+  cssRenderer.domElement.style.top = '-32px'
+  cssRenderer.domElement.style.pointerEvents = 'none'
+
+  document.getElementById('3d-glob').appendChild(cssRenderer.domElement)
 
   // Initialize scene, light
   scene = new Scene()
@@ -65,8 +81,8 @@ function init() {
   camera.add(dLight2)
 
   camera.position.z = 400
-  camera.position.x = 0
-  camera.position.y = 0
+  camera.position.x = 20000
+  camera.position.y = 5000
 
   camera.zoom = 1.7
 
@@ -89,7 +105,7 @@ function init() {
   controls.dynamicDampingFactor = 0.01
   controls.enablePan = false
   controls.minDistance = 200
-  controls.maxDistance = 500
+  controls.maxDistance = 400
   controls.rotateSpeed = 0.8
   controls.zoomSpeed = 1
   controls.autoRotate = false
@@ -101,6 +117,20 @@ function init() {
   // document.addEventListener('mousemove', onMouseMove)
 }
 
+const renderAirport = (name) => {
+  return `<div
+   style="color: #FAF6FE;
+   background: #ffffff29;
+   line-height: 27px;
+   font-family: Futura Round Medium;
+   padding: 0 24px;
+   border-radius: 40px;
+   font-size: 16px;
+   border: 1px solid rgba(159, 115, 202, 0.5)">
+   ${name}
+   </div>`
+}
+
 // SECTION Globe
 function initGlobe() {
   // Initialize the Globe
@@ -109,6 +139,14 @@ function initGlobe() {
     animateIn: true,
   })
     .showGlobe(false)
+
+    .htmlElementsData(airportHistory.airports)
+    .htmlElement((d) => {
+      const el = document.createElement('div')
+      el.innerHTML = renderAirport(d.city)
+      return el
+    })
+
     .hexPolygonsData(countries.features)
     .hexPolygonResolution(3)
     .hexPolygonMargin(0.7)
@@ -123,6 +161,39 @@ function initGlobe() {
       ) {
         return 'rgba(255,255,255, 1)'
       } else return 'rgba(255,255,255, 0.7)'
+    })
+
+    .customLayerData(airportHistory.airports)
+    .customThreeObject((d) => {
+      let circle = new Mesh(
+        new CircleGeometry(d.isInactive ? 0.4 : 0.6)
+          .translate(0, 0, 1.01)
+          .rotateX(Math.PI),
+        new MeshBasicMaterial({ color: '#00FECD', side: DoubleSide }),
+      )
+
+      const ringInner = d.isInactive ? 1.4 : 0.6
+      const ringOuter = 1.5
+
+      const ring = new Mesh(
+        new RingGeometry(ringInner, ringOuter)
+          .translate(0, 0, 1)
+          .rotateX(Math.PI),
+        new MeshBasicMaterial({
+          color: 'rgba(4, 164, 135, 0.5)',
+          side: DoubleSide,
+        }),
+      )
+
+      circle.add(ring)
+      ring.lookAt(0, 0, 0)
+
+      return circle
+    })
+    .customThreeObjectUpdate((obj, d) => {
+      Object.assign(obj.position, Globe.getCoords(d.lat, d.lng, d.alt))
+
+      obj.lookAt(0, 0, 0)
     })
 
   // NOTE Arc animations are followed after the globe enters the scene
@@ -142,13 +213,12 @@ function initGlobe() {
       .arcDashAnimateTime(1000)
       .arcsTransitionDuration(1000)
       .arcDashInitialGap((e) => e.order * 1)
-      .labelsData(airportHistory.airports)
-      .labelColor(() => '#ffcb21')
-      .labelSize((e) => e.size)
-      .labelText('city')
-      .labelResolution(6)
-      .labelAltitude(0.03)
-      .labelIncludeDot(false)
+
+    // .pointsData(airportHistory.airports)
+    // .pointColor(() => 'aqua')
+    // .pointAltitude(0.07)
+    // .pointsMerge(true)
+    // .pointRadius(0.03)
   }, 1000)
 
   const globeMaterial = Globe.globeMaterial()
@@ -158,8 +228,6 @@ function initGlobe() {
   globeMaterial.wireframe = true
 
   scene.add(Globe)
-
-  // scene.children[scene.children?.length - 1].position.set(80, 0, 0)
 }
 
 // function onMouseMove(event) {
@@ -184,12 +252,16 @@ function animate() {
   // camera.position.y += (-mouseY / 2 - camera.position.y) * 0.005
   camera.lookAt(scene.position)
   controls.update()
-  renderer.render(scene, camera)
+
+  let renderers = [renderer, cssRenderer]
+  renderers.forEach((r) => r.render(scene, camera))
+
   requestAnimationFrame(animate)
 }
 
 function App() {
   const [location, setLocation] = useState({ ...DEFAULT_LOCATION })
+  const [nav, setNav] = useState('all')
 
   useEffect(() => {
     init()
@@ -213,14 +285,34 @@ function App() {
       <chakra.div {...blurringBlueStyle} />
 
       <HStack {...navbarStyle}>
-        <Button {...navButtonStyle} w='127px' variant='ghost'>
-          All location
+        <Button
+          {...navButtonStyle}
+          bg={nav === 'all' ? 'rgba(81, 36, 117, 1)' : 'transparent'}
+          onClick={() => setNav('all')}
+          w='127px'
+          variant='ghost'
+        >
+          All locations
         </Button>
-        <Button {...navButtonStyle} w='173px' variant='ghost'>
-          Active location
+        <Button
+          {...navButtonStyle}
+          bg={nav === 'active' ? 'rgba(81, 36, 117, 1)' : 'transparent'}
+          onClick={() => setNav('active')}
+          w='173px'
+          variant='ghost'
+        >
+          <RadioIcon checked />
+          Active locations
         </Button>
-        <Button {...navButtonStyle} w='185px' variant='ghost'>
-          Planned location
+        <Button
+          {...navButtonStyle}
+          bg={nav === 'planned' ? 'rgba(81, 36, 117, 1)' : 'transparent'}
+          onClick={() => setNav('planned')}
+          w='185px'
+          variant='ghost'
+        >
+          <RadioIcon />
+          Planned locations
         </Button>
       </HStack>
 

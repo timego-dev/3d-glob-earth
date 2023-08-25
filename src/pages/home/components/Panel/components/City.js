@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Badge, Button, Heading, Text, VStack } from '@chakra-ui/react'
 import { REGION_LABELS } from '../const'
-import { locationAlias } from '../../../const'
+import { locationAlias } from '../../../constants/const'
 
 City.propTypes = {
   onLocationChange: PropTypes.func,
