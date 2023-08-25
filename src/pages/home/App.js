@@ -72,7 +72,7 @@ function App() {
       const globPlace = document.getElementById('3d-glob')
       if (globPlace) globPlace.innerHTML = ''
     }
-  }, [resizeWindow])
+  }, [animate, resizeWindow])
 
   useEffect(() => {
     if (threeCanvas.current.scene) {
