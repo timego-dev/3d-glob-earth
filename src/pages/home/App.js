@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Button, chakra, HStack } from '@chakra-ui/react'
 import Panel from './components/Panel'
-import { DEFAULT_LOCATION } from './constants/const'
+import { copyJson, DEFAULT_LOCATION } from './constants/const'
 import {
   blurringBlueStyle,
   globStyle,
@@ -9,15 +9,8 @@ import {
   navButtonStyle,
 } from './constants/style'
 import RadioIcon from './components/Circle'
-import { init, renderAirport } from './constants/globe'
+import { init } from './constants/globe'
 import locations from 'assets/json/locations.json'
-import {
-  CircleGeometry,
-  DoubleSide,
-  Mesh,
-  MeshBasicMaterial,
-  RingGeometry,
-} from 'three'
 
 function App() {
   const [location, setLocation] = useState({ ...DEFAULT_LOCATION })
@@ -31,17 +24,6 @@ function App() {
     controls: null,
   })
   const requestRef = useRef(null)
-  const newTime = Date.now().valueOf()
-
-  // useEffect(() => {
-  //   if (threeCanvas.current.scene) {
-  //     requestRef.current = requestAnimationFrame(() => animate(threeCanvas))
-  //   }
-  //
-  //   return () => {
-  //     cancelAnimationFrame(requestRef.current)
-  //   }
-  // }, [])
 
   const animate = useCallback((threeCanvas) => {
     if (!threeCanvas?.scene) return
@@ -58,13 +40,14 @@ function App() {
   }, [])
 
   const resizeWindow = useCallback(() => {
-    const { camera, renderer } = threeCanvas.current
+    const { camera, renderer, cssRenderer } = threeCanvas.current
 
-    if (camera && renderer) {
+    if ((camera && renderer, cssRenderer)) {
       camera.aspect = window.innerWidth / window.innerHeight
       camera.updateProjectionMatrix()
 
       renderer.setSize(window.innerWidth, window.innerHeight)
+      cssRenderer.setSize(window.innerWidth, window.innerHeight)
     }
   }, [])
 
@@ -94,65 +77,15 @@ function App() {
   useEffect(() => {
     if (threeCanvas.current.scene) {
       if (nav === 'all') {
-        threeCanvas.current.Globe.customLayerData([...locations])
-        threeCanvas.current.Globe.htmlElementsData([...locations])
+        threeCanvas.current.Globe.customLayerData(
+          copyJson(locations),
+        ).htmlElementsData(copyJson(locations))
       } else {
         let filterLocations = locations.filter((loc) => loc.state === nav)
 
-        let locs = document.getElementsByClassName('location')
-        Array.from(locs).forEach((loc) => {
-          loc.style.display = 'none'
-        })
-
-        threeCanvas.current.Globe.htmlElementsData([
-          ...filterLocations,
-        ]).htmlElement((d) => {
-          const el = document.createElement('div')
-          el.innerHTML = renderAirport(d.city)
-          return el
-        })
-
         threeCanvas.current.Globe.customLayerData(
-          filterLocations,
-        ).customThreeObject((d) => {
-          let circle = new Mesh(
-            new CircleGeometry(d.state === 'planned' ? 0.4 : 0.6)
-              .translate(0, 0, 1.01)
-              .rotateX(Math.PI),
-            new MeshBasicMaterial({ color: '#00FECD', side: DoubleSide }),
-          )
-
-          const ringInner = d.state === 'planned' ? 1.4 : 0.6
-
-          const ring = new Mesh(
-            new RingGeometry(ringInner, 1.5)
-              .translate(0, 0, 1)
-              .rotateX(Math.PI),
-            new MeshBasicMaterial({
-              color: 'rgba(4, 164, 135, 0.5)',
-              side: DoubleSide,
-            }),
-          )
-
-          circle.add(ring)
-          ring.lookAt(0, 0, 0)
-
-          return circle
-        })
-
-        console.log(threeCanvas.current.Globe)
-
-        // .customThreeObjectUpdate((obj, d) => {
-        //   Object.assign(
-        //     obj.position,
-        //     threeCanvas.current.Globe.getCoords(d.lat, d.lng, d.alt),
-        //   )
-        //
-        //   obj.lookAt(0, 0, 0)
-        // })
-
-        cancelAnimationFrame(requestRef.current)
-        animate(threeCanvas.current)
+          copyJson(filterLocations),
+        ).htmlElementsData(copyJson(filterLocations))
       }
     }
   }, [nav])

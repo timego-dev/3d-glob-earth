@@ -20,6 +20,7 @@ import locations from 'assets/json/locations.json'
 import countries from 'assets/globe-data-min.json'
 import travelHistory from 'assets/my-flights.json'
 import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer'
+import { copyJson } from './const'
 
 // var renderer, cssRenderer, camera, scene, controls
 // let mouseX = 0
@@ -41,19 +42,6 @@ export const renderAirport = (name) => {
    border: 1px solid rgba(159, 115, 202, 0.5)">
    ${name}
    </div>`
-}
-
-export const newCssRenderer = () => {
-  let cssRenderer = new CSS2DRenderer()
-  cssRenderer.setSize(window.innerWidth, window.innerHeight)
-  cssRenderer.domElement.style.position = 'absolute'
-  cssRenderer.domElement.style.top = '-32px'
-  cssRenderer.domElement.style.pointerEvents = 'none'
-  document.getElementById('3d-glob').appendChild(cssRenderer.domElement)
-
-  console.log(cssRenderer.domElement.children)
-
-  return cssRenderer
 }
 
 export function init() {
@@ -131,7 +119,7 @@ export function init() {
   })
     .showGlobe(false)
 
-    .htmlElementsData(locations)
+    .htmlElementsData(copyJson(locations))
     .htmlElement((d) => {
       const el = document.createElement('div')
       el.innerHTML = renderAirport(d.city)
@@ -154,7 +142,7 @@ export function init() {
       } else return 'rgba(255,255,255, 0.7)'
     })
 
-    .customLayerData(locations)
+    .customLayerData(copyJson(locations))
     .customThreeObject((d) => {
       let circle = new Mesh(
         new CircleGeometry(d.isInactive ? 0.4 : 0.6)
