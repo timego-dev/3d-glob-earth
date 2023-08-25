@@ -118,28 +118,34 @@ function App() {
       <chakra.div {...globStyle} id='3d-glob' />
       <chakra.div {...blurringBlueStyle} />
 
-      <HStack
-        sizing={8}
-        position='absolute'
-        right='64px'
-        top='64px'
-        zIndex={20}
-      >
-        <Button
-          onClick={() => hdChangeLocation(locationAlias.reg, switchRegion.prev)}
-          {...changeLocCaret}
+      {location[locationAlias.reg] && (
+        <HStack
+          sizing={8}
+          position='absolute'
+          right='64px'
+          top='64px'
+          zIndex={20}
         >
-          <ArrowBackIcon fontSize='20px' mr='8px' />
-          Go to {REGION_LABELS[switchRegion.prev]?.label}
-        </Button>
-        <Button
-          onClick={() => hdChangeLocation(locationAlias.reg, switchRegion.forw)}
-          {...changeLocCaret}
-        >
-          Go to {REGION_LABELS[switchRegion.forw]?.label}
-          <ArrowForwardIcon ml='8px' fontSize='20px' />
-        </Button>
-      </HStack>
+          <Button
+            onClick={() =>
+              hdChangeLocation(locationAlias.reg, switchRegion.prev)
+            }
+            {...changeLocCaret}
+          >
+            <ArrowBackIcon fontSize='20px' mr='8px' />
+            Go to {REGION_LABELS[switchRegion.prev]?.label}
+          </Button>
+          <Button
+            onClick={() =>
+              hdChangeLocation(locationAlias.reg, switchRegion.forw)
+            }
+            {...changeLocCaret}
+          >
+            Go to {REGION_LABELS[switchRegion.forw]?.label}
+            <ArrowForwardIcon ml='8px' fontSize='20px' />
+          </Button>
+        </HStack>
+      )}
 
       <HStack {...navbarStyle}>
         <Button
