@@ -1,7 +1,13 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Button, chakra, HStack } from '@chakra-ui/react'
 import Panel from './components/Panel'
-import { copyJson, DEFAULT_LOCATION } from './constants/const'
+import {
+  copyJson,
+  DEFAULT_LOCATION,
+  locationAlias,
+  REGION_LABELS,
+  REGIONS,
+} from './constants/const'
 import {
   blurringBlueStyle,
   globStyle,
@@ -11,6 +17,8 @@ import {
 import RadioIcon from './components/Circle'
 import { init } from './constants/globe'
 import locations from 'assets/json/locations.json'
+import { changeLocCaret } from './components/Panel/styles'
+import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons'
 
 function App() {
   const [location, setLocation] = useState({ ...DEFAULT_LOCATION })
@@ -94,10 +102,44 @@ function App() {
     setLocation((prev) => ({ ...prev, [key]: value }))
   }
 
+  const switchRegion = useMemo(() => {
+    const navIdx = REGIONS.indexOf(location[locationAlias.reg])
+    if (navIdx === 1) return { prev: REGIONS[0], forw: REGIONS[2] }
+
+    let [prev, forw] = REGIONS.filter(
+      (reg) => reg !== location[locationAlias.reg],
+    ).reverse()
+
+    return { prev, forw }
+  }, [location])
+
   return (
     <div className='container'>
       <chakra.div {...globStyle} id='3d-glob' />
       <chakra.div {...blurringBlueStyle} />
+
+      <HStack
+        sizing={8}
+        position='absolute'
+        right='64px'
+        top='64px'
+        zIndex={20}
+      >
+        <Button
+          onClick={() => hdChangeLocation(locationAlias.reg, switchRegion.prev)}
+          {...changeLocCaret}
+        >
+          <ArrowBackIcon fontSize='20px' mr='8px' />
+          Go to {REGION_LABELS[switchRegion.prev]?.label}
+        </Button>
+        <Button
+          onClick={() => hdChangeLocation(locationAlias.reg, switchRegion.forw)}
+          {...changeLocCaret}
+        >
+          Go to {REGION_LABELS[switchRegion.forw]?.label}
+          <ArrowForwardIcon ml='8px' fontSize='20px' />
+        </Button>
+      </HStack>
 
       <HStack {...navbarStyle}>
         <Button

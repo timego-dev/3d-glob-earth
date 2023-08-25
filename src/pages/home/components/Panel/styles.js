@@ -35,13 +35,42 @@ export const regionButtonStyle = {
   h: '60px',
   fontFamily: 'Futura Round Bold',
   fontSize: '18px',
-  border: '1px solid transparent',
-  background:
-    'linear-gradient(#00000075, #00000075) padding-box, ' +
-    'linear-gradient(to right, rgb(216 180 253 / 58%), rgb(216 180 253 / 68%)) border-box',
+  // border: '1px solid transparent',
+  bg: 'rgb(255 255 255 / 10%)',
+  border: '1px solid rgb(216 180 253 / 64%)',
+  // background:
+  //   'linear-gradient(#00000075, #00000075) padding-box, ' +
+  //   'linear-gradient(to right, rgb(216 180 253 / 58%), rgb(216 180 253 / 68%)) border-box',
   color: '#FAF6FE',
   w: '100%',
   _hover: {
     bg: 'linear-gradient(#997FB9, #977EB6, #9F7FC3)',
+  },
+}
+
+export const cityButtonStyle = {
+  borderRadius: '40px',
+  p: '8px 24px',
+  h: '31px',
+  bg: 'rgb(255 255 255 / 13%)',
+  color: 'rgba(250, 246, 254, 1) !important',
+  border: '1px solid rgb(216 180 253 / 64%)',
+  fontFamily: 'Futura Round Medium',
+  _hover: {
+    bg: 'rgb(255 255 255 / 40%)',
+  },
+}
+
+export const changeLocCaret = {
+  bg: 'transparent',
+  color: 'rgba(255, 255, 255, 1)',
+  fontFamily: 'Futura Round Bold',
+  fontSize: '16px',
+  lineHeight: '16px',
+  border: '2px solid white',
+  borderRadius: '40px',
+  p: '10px 24px',
+  _hover: {
+    bg: 'rgb(255 255 255 / 20%)',
   },
 }
