@@ -9,7 +9,7 @@ import {
   navButtonStyle,
 } from './constants/style'
 import RadioIcon from './components/Circle'
-import { init } from './constants/globe'
+import { init, renderAirport } from './constants/globe'
 import locations from 'assets/json/locations.json'
 import {
   CircleGeometry,
@@ -30,18 +30,31 @@ function App() {
     camera: null,
     controls: null,
   })
+  const requestRef = useRef(null)
+  const newTime = Date.now().valueOf()
 
-  const animate = useCallback(() => {
-    const { renderer, scene, cssRenderer, camera, controls } =
-      threeCanvas.current
+  // useEffect(() => {
+  //   if (threeCanvas.current.scene) {
+  //     requestRef.current = requestAnimationFrame(() => animate(threeCanvas))
+  //   }
+  //
+  //   return () => {
+  //     cancelAnimationFrame(requestRef.current)
+  //   }
+  // }, [])
+
+  const animate = useCallback((threeCanvas) => {
+    if (!threeCanvas?.scene) return
+
+    const { renderer, scene, cssRenderer, camera, controls } = threeCanvas
 
     camera.lookAt(scene.position)
     controls.update()
 
-    let renderers = [renderer, cssRenderer]
-    renderers.forEach((r) => r.render(scene, camera))
+    renderer.render(scene, camera)
+    cssRenderer.render(scene, camera)
 
-    requestAnimationFrame(animate)
+    requestRef.current = requestAnimationFrame(() => animate(threeCanvas))
   }, [])
 
   const resizeWindow = useCallback(() => {
@@ -67,7 +80,7 @@ function App() {
     })
 
     // Animate
-    animate()
+    animate(threeCanvas.current)
 
     return () => {
       // Remove the resize event
@@ -76,7 +89,7 @@ function App() {
       const globPlace = document.getElementById('3d-glob')
       if (globPlace) globPlace.innerHTML = ''
     }
-  }, [animate, resizeWindow])
+  }, [resizeWindow])
 
   useEffect(() => {
     if (threeCanvas.current.scene) {
@@ -86,42 +99,60 @@ function App() {
       } else {
         let filterLocations = locations.filter((loc) => loc.state === nav)
 
-        threeCanvas.current.Globe.customLayerData(filterLocations)
-          .customThreeObject((d) => {
-            let circle = new Mesh(
-              new CircleGeometry(d.isInactive ? 0.4 : 0.6)
-                .translate(0, 0, 1.01)
-                .rotateX(Math.PI),
-              new MeshBasicMaterial({ color: '#00FECD', side: DoubleSide }),
-            )
+        let locs = document.getElementsByClassName('location')
+        Array.from(locs).forEach((loc) => {
+          loc.style.display = 'none'
+        })
 
-            const ringInner = d.state === 'planned' ? 1.4 : 0.6
+        threeCanvas.current.Globe.htmlElementsData([
+          ...filterLocations,
+        ]).htmlElement((d) => {
+          const el = document.createElement('div')
+          el.innerHTML = renderAirport(d.city)
+          return el
+        })
 
-            const ring = new Mesh(
-              new RingGeometry(ringInner, 1.5)
-                .translate(0, 0, 1)
-                .rotateX(Math.PI),
-              new MeshBasicMaterial({
-                color: 'rgba(4, 164, 135, 0.5)',
-                side: DoubleSide,
-              }),
-            )
+        threeCanvas.current.Globe.customLayerData(
+          filterLocations,
+        ).customThreeObject((d) => {
+          let circle = new Mesh(
+            new CircleGeometry(d.state === 'planned' ? 0.4 : 0.6)
+              .translate(0, 0, 1.01)
+              .rotateX(Math.PI),
+            new MeshBasicMaterial({ color: '#00FECD', side: DoubleSide }),
+          )
 
-            circle.add(ring)
-            ring.lookAt(0, 0, 0)
+          const ringInner = d.state === 'planned' ? 1.4 : 0.6
 
-            return circle
-          })
-          .customThreeObjectUpdate((obj, d) => {
-            Object.assign(
-              obj.position,
-              threeCanvas.current.Globe.getCoords(d.lat, d.lng, d.alt),
-            )
+          const ring = new Mesh(
+            new RingGeometry(ringInner, 1.5)
+              .translate(0, 0, 1)
+              .rotateX(Math.PI),
+            new MeshBasicMaterial({
+              color: 'rgba(4, 164, 135, 0.5)',
+              side: DoubleSide,
+            }),
+          )
 
-            obj.lookAt(0, 0, 0)
-          })
+          circle.add(ring)
+          ring.lookAt(0, 0, 0)
 
-        threeCanvas.current.Globe.htmlElementsData([...filterLocations])
+          return circle
+        })
+
+        console.log(threeCanvas.current.Globe)
+
+        // .customThreeObjectUpdate((obj, d) => {
+        //   Object.assign(
+        //     obj.position,
+        //     threeCanvas.current.Globe.getCoords(d.lat, d.lng, d.alt),
+        //   )
+        //
+        //   obj.lookAt(0, 0, 0)
+        // })
+
+        cancelAnimationFrame(requestRef.current)
+        animate(threeCanvas.current)
       }
     }
   }, [nav])
