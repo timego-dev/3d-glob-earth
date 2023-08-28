@@ -5,6 +5,7 @@ import {
   copyJson,
   DEFAULT_LOCATION,
   locationAlias,
+  REGION_COORDINATES,
   REGION_LABELS,
   REGIONS,
 } from './constants/const'
@@ -19,6 +20,7 @@ import { init } from './constants/globe'
 import locations from 'assets/json/locations.json'
 import { changeLocCaret } from './components/Panel/styles'
 import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons'
+import gsap from 'gsap'
 
 function App() {
   const [location, setLocation] = useState({ ...DEFAULT_LOCATION })
@@ -32,6 +34,61 @@ function App() {
     controls: null,
   })
   const requestRef = useRef(null)
+
+  useEffect(() => {
+    if (threeCanvas.current.scene && !location[locationAlias.reg]) {
+      const { x, y } = threeCanvas.current.camera.position
+
+      gsap.to(threeCanvas.current.camera.position, {
+        x,
+        y,
+        z: 400,
+        duration: 2,
+        ease: 'power2.out',
+      })
+    }
+
+    if (threeCanvas.current.scene && location[locationAlias.reg]) {
+      let selectCountry = REGION_COORDINATES[location[locationAlias.reg]]
+
+      let startPos = threeCanvas.current.camera.position.clone()
+      let endPos = threeCanvas.current.Globe.getCoords(
+        selectCountry.lat,
+        selectCountry.lng,
+      )
+
+      let depthLevel = Object.values(location).filter((v) => !!v).length
+
+      let camDistance = threeCanvas.current.camera.position.length()
+      let maxCamDepth = 400 - depthLevel * 15
+
+      gsap.fromTo(
+        threeCanvas.current.camera.position,
+        {
+          x: startPos.x,
+          y: startPos.y,
+          z: startPos.z,
+        },
+        {
+          duration: 2,
+          ease: 'power2.out',
+          x: endPos.x,
+          y: endPos.y,
+          z: endPos.z,
+
+          onUpdate: () => {
+            if (camDistance > maxCamDepth) camDistance -= 1
+
+            threeCanvas.current.camera.position
+              .normalize()
+              .multiplyScalar(camDistance)
+
+            threeCanvas.current.camera.lookAt(endPos)
+          },
+        },
+      )
+    }
+  }, [location])
 
   const animate = useCallback((threeCanvas) => {
     if (!threeCanvas?.scene) return
@@ -50,7 +107,7 @@ function App() {
   const resizeWindow = useCallback(() => {
     const { camera, renderer, cssRenderer } = threeCanvas.current
 
-    if ((camera && renderer, cssRenderer)) {
+    if (camera && renderer && cssRenderer) {
       camera.aspect = window.innerWidth / window.innerHeight
       camera.updateProjectionMatrix()
 
@@ -76,6 +133,8 @@ function App() {
     return () => {
       // Remove the resize event
       controller.abort()
+
+      cancelAnimationFrame(requestRef.current)
 
       const globPlace = document.getElementById('3d-glob')
       if (globPlace) globPlace.innerHTML = ''
