@@ -37,3 +37,32 @@ export const REGION_COORDINATES = {
   [REGIONS[1]]: { lat: 47.116386, lng: -101.299591 },
   [REGIONS[2]]: { lat: 34.047863, lng: 100.619655 },
 }
+
+export const CITIES = ['hk', 'sing', 'syd', 'tok']
+
+export const CITIES_LABELS = {
+  [CITIES[0]]: 'Hong Kong',
+  [CITIES[1]]: 'Singapore',
+  [CITIES[2]]: 'Sydney',
+  [CITIES[3]]: 'Tokyo',
+}
+
+export const CITIES_DETAILS = {
+  [CITIES[0]]: {
+    label: 'Hong Kong',
+    desc: 'A short description that explains something about this city in correlation to inter.link',
+    cities: [{ label: 'Hong Kong', value: 'hk' }],
+  },
+  [CITIES[1]]: {
+    label: 'Singapore',
+    desc: 'A short description that explains something about this city in correlation to inter.link',
+  },
+  [CITIES[2]]: {
+    label: 'Sydney',
+    desc: 'A short description that explains something about this city in correlation to inter.link',
+  },
+  [CITIES[3]]: {
+    label: 'Tokyo',
+    desc: 'A short description that explains something about this city in correlation to inter.link',
+  },
+}

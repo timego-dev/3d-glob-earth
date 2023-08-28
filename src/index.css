@@ -20,6 +20,12 @@ body {
 }
 
 @font-face {
+  font-family: 'Futura Round Demi';
+  src: url('assets/font/Futura Round Demi.ttf');
+  font-weight: 600;
+}
+
+@font-face {
   font-family: 'Futura Round Bold';
   src: url('assets/font/Futura Round Bold.ttf');
   font-weight: 700;

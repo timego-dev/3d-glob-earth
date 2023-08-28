@@ -5,6 +5,7 @@ import { VStack } from '@chakra-ui/react'
 import Overview from './components/Overview'
 import { locationAlias } from '../../constants/const'
 import City from './components/City'
+import Connect from './components/Connect'
 
 Panel.propTypes = {
   onLocationChange: PropTypes.func,
@@ -23,9 +24,11 @@ function Panel(props) {
   )
 
   const connectNotSelected = useMemo(
-    () => !props.location?.[locationAlias.con],
+    () => props.location?.[locationAlias.con]?.length === 0,
     [props.location],
   )
+
+  console.log({ cityNotSelected, connectNotSelected })
 
   return (
     <VStack {...panelStyle}>
@@ -41,7 +44,10 @@ function Panel(props) {
       )}
 
       {!cityNotSelected && connectNotSelected && (
-        <Overview onLocationChange={props.onLocationChange} />
+        <Connect
+          location={props.location}
+          onLocationChange={props.onLocationChange}
+        />
       )}
     </VStack>
   )

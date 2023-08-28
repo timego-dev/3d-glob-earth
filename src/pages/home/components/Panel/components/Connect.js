@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Button, Heading, Text, VStack, Wrap, WrapItem } from '@chakra-ui/react'
 import {
   CITIES,
+  CITIES_DETAILS,
   CITIES_LABELS,
   locationAlias,
   REGION_LABELS,
@@ -11,24 +12,25 @@ import { cityButtonStyle } from '../styles'
 import RadioIcon from '../../Circle'
 import { ArrowBackIcon } from '@chakra-ui/icons'
 
-City.propTypes = {
+Connect.propTypes = {
   onLocationChange: PropTypes.func,
   location: PropTypes.object,
 }
 
-function City(props) {
+function Connect(props) {
+  console.log(props.location)
   return (
     <>
       <VStack align='flex-start' justify='space-between' h='100%'>
         <VStack align='flex-start'>
           <Button
             textDecoration='none !important'
+            fontSize='19px'
+            fontFamily='Futura Round Demi'
             leftIcon={<ArrowBackIcon />}
             mb='76px'
             color='white'
             variant='link'
-            fontSize='19px'
-            fontFamily='Futura Round Demi'
             onClick={() => props.onLocationChange(locationAlias.reg, '')}
           >
             Back to overview
@@ -53,15 +55,21 @@ function City(props) {
             fontFamily='Futura Round Bold'
             textTransform='uppercase'
           >
-            {REGION_LABELS[props.location?.[locationAlias.reg]]?.label}
+            {CITIES_DETAILS[props.location?.[locationAlias.ct]]?.label}
           </Heading>
 
-          <Text mt='8px' fontSize='19px' lineHeight='23px'>
-            {REGION_LABELS[props.location?.[locationAlias.reg]]?.desc}
+          <Text mt='8px' fontSize='19px' lineHeight='23px' mb='60px'>
+            {CITIES_DETAILS[props.location?.[locationAlias.ct]]?.desc}
           </Text>
 
           <VStack align='flex-start' mt='60px'>
-            <Text lineHeight='23px'>Our Cities:</Text>
+            <Text
+              lineHeight='23px'
+              fontFamily='Futura Round Medium'
+              fontSize='19px'
+            >
+              Direct connections:
+            </Text>
 
             <Wrap spacing='12px' w='300px' mt='16px'>
               {CITIES.map((c) => (
@@ -91,4 +99,4 @@ function City(props) {
   )
 }
 
-export default City
+export default Connect
