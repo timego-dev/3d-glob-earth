@@ -1,8 +1,7 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Button, Heading, Text, VStack, Wrap, WrapItem } from '@chakra-ui/react'
 import {
-  CITIES_LABELS,
   DEFAULT_LOCATION,
   locationAlias,
   locationByRegion,
@@ -18,6 +17,8 @@ City.propTypes = {
 }
 
 function City(props) {
+  const [isBook, setIsBook] = useState(true)
+
   const cities = useMemo(
     () => locationByRegion[props.location[locationAlias.reg]]?.countries || [],
     [props.location],
@@ -77,7 +78,7 @@ function City(props) {
 
             <Wrap spacing='12px' w='100%' mt='16px'>
               {cities.map((c) => (
-                <WrapItem key={c}>
+                <WrapItem key={c.lat}>
                   <Button
                     {...cityButtonStyle}
                     onClick={() =>
@@ -93,13 +94,27 @@ function City(props) {
           </VStack>
         </VStack>
 
-        <Button
-          color='white'
-          variant='link'
-          // onClick={() => props.onLocationChange(locationAlias.reg, '')}
-        >
-          Book IP transit now
-        </Button>
+        {isBook ? (
+          <Button
+            color='white'
+            variant='link'
+            onClick={() => setIsBook((prev) => !prev)}
+          >
+            Book IP transit now
+          </Button>
+        ) : (
+          <Button
+            borderRadius='40px'
+            fontFamily='Futura Round Bold'
+            fontSize='16px'
+            p='13px 24px 10px 24px'
+            bg='#02DDB5 !important'
+            color='white'
+            onClick={() => setIsBook((prev) => !prev)}
+          >
+            Book Services
+          </Button>
+        )}
       </VStack>
     </>
   )

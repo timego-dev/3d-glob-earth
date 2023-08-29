@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Button, chakra, HStack } from '@chakra-ui/react'
 import Panel from './components/Panel'
 import {
+  calculateFlightData,
   copyJson,
   DEFAULT_LOCATION,
   locationAlias,
@@ -166,15 +167,33 @@ function App() {
   useEffect(() => {
     if (threeCanvas.current.scene) {
       if (nav === 'all') {
-        threeCanvas.current.Globe.customLayerData(
-          copyJson(locations),
-        ).htmlElementsData(copyJson(locations))
-      } else {
-        let filterLocations = locations.filter((loc) => loc.state === nav)
+        threeCanvas.current.Globe.arcsData(calculateFlightData())
+          .arcColor(() => {
+            return 'rgba(9, 196, 162, 1)'
+          })
+          .arcStroke(() => {
+            return 0.5
+          })
 
-        threeCanvas.current.Globe.customLayerData(
-          copyJson(filterLocations),
-        ).htmlElementsData(copyJson(filterLocations))
+        // threeCanvas.current.Globe.customLayerData(
+        //   copyJson(locations),
+        // ).htmlElementsData(copyJson(locations))
+      } else {
+        threeCanvas.current.Globe.arcsData(calculateFlightData())
+          .arcColor((e) => {
+            return e.state === nav
+              ? 'rgba(9, 196, 162, 1)'
+              : 'rgba(179, 171, 184, 1)'
+          })
+          .arcStroke((e) => {
+            return e.state === nav ? 0.5 : 0.3
+          })
+
+        // let filterLocations = locations.filter((loc) => loc.state === nav)
+        //
+        // threeCanvas.current.Globe.customLayerData(
+        //   copyJson(filterLocations),
+        // ).htmlElementsData(copyJson(filterLocations))
       }
     }
   }, [nav])
@@ -234,37 +253,39 @@ function App() {
         </HStack>
       )}
 
-      <HStack {...navbarStyle}>
-        <Button
-          {...navButtonStyle}
-          bg={nav === 'all' ? 'rgba(81, 36, 117, 1)' : 'transparent'}
-          onClick={() => setNav('all')}
-          w='127px'
-          variant='ghost'
-        >
-          All locations
-        </Button>
-        <Button
-          {...navButtonStyle}
-          bg={nav === 'active' ? 'rgba(81, 36, 117, 1)' : 'transparent'}
-          onClick={() => setNav('active')}
-          w='173px'
-          variant='ghost'
-        >
-          <RadioIcon checked />
-          Active locations
-        </Button>
-        <Button
-          {...navButtonStyle}
-          bg={nav === 'planned' ? 'rgba(81, 36, 117, 1)' : 'transparent'}
-          onClick={() => setNav('planned')}
-          w='185px'
-          variant='ghost'
-        >
-          <RadioIcon />
-          Planned locations
-        </Button>
-      </HStack>
+      {location[locationAlias.ct] || (
+        <HStack {...navbarStyle}>
+          <Button
+            {...navButtonStyle}
+            bg={nav === 'all' ? 'rgba(81, 36, 117, 1)' : 'transparent'}
+            onClick={() => setNav('all')}
+            w='127px'
+            variant='ghost'
+          >
+            All locations
+          </Button>
+          <Button
+            {...navButtonStyle}
+            bg={nav === 'active' ? 'rgba(81, 36, 117, 1)' : 'transparent'}
+            onClick={() => setNav('active')}
+            w='173px'
+            variant='ghost'
+          >
+            <RadioIcon checked />
+            Active locations
+          </Button>
+          <Button
+            {...navButtonStyle}
+            bg={nav === 'planned' ? 'rgba(81, 36, 117, 1)' : 'transparent'}
+            onClick={() => setNav('planned')}
+            w='185px'
+            variant='ghost'
+          >
+            <RadioIcon />
+            Planned locations
+          </Button>
+        </HStack>
+      )}
 
       <Panel location={location} onLocationChange={hdChangeLocation} />
     </div>

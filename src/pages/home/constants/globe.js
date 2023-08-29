@@ -20,7 +20,7 @@ import locations from 'assets/json/locations.json'
 import countries from 'assets/globe-data-min.json'
 import travelHistory from 'assets/my-flights.json'
 import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer'
-import { copyJson } from './const'
+import { calculateFlightData, copyJson } from './const'
 
 export const renderAirport = (name) => {
   return `<div
@@ -167,21 +167,21 @@ export function init() {
 
   // NOTE Arc animations are followed after the globe enters the scene
   setTimeout(() => {
-    Globe.arcsData(travelHistory.flights)
+    Globe.arcsData(calculateFlightData())
       .arcColor((e) => {
-        return e.status ? 'rgba(9, 196, 162, 1)' : 'rgba(179, 171, 184, 1)'
+        return e.state ? 'rgba(9, 196, 162, 1)' : 'rgba(179, 171, 184, 1)'
       })
       .arcAltitude((e) => {
         return e.arcAlt
       })
       .arcStroke((e) => {
-        return e.status ? 0.5 : 0.3
+        return e.state ? 0.5 : 0.3
       })
       .arcDashLength(0.5)
       .arcDashGap(4)
       .arcDashAnimateTime(1000)
       .arcsTransitionDuration(1000)
-      .arcDashInitialGap((e) => e.order * 1)
+      .arcDashInitialGap((e) => Math.floor(Math.random() * 5) + 1)
   }, 1000)
 
   const globeMaterial = Globe.globeMaterial()

@@ -72,21 +72,40 @@ export const locationSelectStyle = {
     w: '284px',
     borderRadius: '8px',
     lineHeight: '16px',
-
-    h: '36px',
-    minH: 'auto',
-    border: '1px solid rgb(216 180 253 / 50%) !important',
+    // h: '',
+    minH: '36px',
+    border: '1px solid rgb(216 180 253 / 30%) !important',
     bg: 'rgb(255 255 255 / 10%)',
     outline: 'none !important',
+    boxShadow: 'none !important',
+  }),
+  group: (provided) => ({ ...provided, marginBottom: '34px', p: '0' }),
+  groupHeading: (provided) => ({
+    ...provided,
+    bg: 'transparent',
+    color: 'white',
+    fontFamily: 'Futura Round Medium',
+    lineHeight: '16px',
+    fontSize: '12px',
   }),
   valueContainer: (provided) => ({ ...provided, pl: '9px', pr: '9px' }),
   menuList: (provided) => ({
     ...provided,
-    border: '1px solid rgb(216 180 253 / 5%) !important',
+    border: '1px solid rgb(216 180 253 / 20%) !important',
     background:
-      'linear-gradient(to top, rgb(215 179 255 / 15%), rgba(216, 180, 253, 0.1))',
+      'linear-gradient(to top, rgb(80 66 94 / 90%), rgb(106 94 118 / 50%))',
     pl: '12px',
     pr: '12px',
+    '&::-webkit-scrollbar': {
+      width: '4px',
+    },
+    '&::-webkit-scrollbar-track': {
+      width: '6px',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      background: '#E8D2FF61',
+      borderRadius: '24px',
+    },
   }),
   placeholder: (provided) => ({
     ...provided,
@@ -112,8 +131,11 @@ export const locationSelectStyle = {
   option: (provided, _state) => ({
     ...provided,
     color: 'white',
-    lineHeight: '24px',
+    lineHeight: '12px',
+    height: '24px',
+    fontSize: '12px',
     backgroundColor: 'transparent',
+    fontFamily: 'Inter, sans-serif',
     borderRadius: '4px',
     _hover: {
       background: 'rgba(232, 210, 255, 0.3)',

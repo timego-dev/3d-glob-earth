@@ -3,11 +3,12 @@
     "text": "FRU",
     "size": 1.0,
     "country": "United States",
-    "city": "New York",
+    "city": "California",
     "lat": "36.778259",
     "lng": "-119.417931",
-    "state": "active",
-    "region": "usa"
+    "state": "planned",
+    "region": "usa",
+    "icon": "um"
   },
   {
     "text": "FRU",
@@ -17,7 +18,8 @@
     "lat": "42.85",
     "lng": "-74.00597",
     "state": "active",
-    "region": "usa"
+    "region": "usa",
+    "icon": "um"
   },
   {
     "text": "FRU",
@@ -27,7 +29,8 @@
     "lat": "47.751076",
     "lng": "-120.740135",
     "state": "active",
-    "region": "usa"
+    "region": "usa",
+    "icon": "um"
   },
   {
     "text": "KJA",
@@ -36,8 +39,9 @@
     "city": "Manchester",
     "lat": "53.483959",
     "lng": "-2.244644",
-    "state": "planned",
-    "region": "europe"
+    "state": "active",
+    "region": "europe",
+    "icon": "gb-eng"
   },
   {
     "text": "KJA",
@@ -46,8 +50,9 @@
     "city": "Berlin",
     "lat": "52.520008",
     "lng": "13.404954",
-    "state": "planned",
-    "region": "europe"
+    "state": "active",
+    "region": "europe",
+    "icon": "de"
   },
   {
     "text": "KJA",
@@ -57,7 +62,8 @@
     "lat": "52.377956",
     "lng": "4.897070",
     "state": "planned",
-    "region": "europe"
+    "region": "europe",
+    "icon": "nl"
   },
   {
     "text": "KJA",
@@ -67,7 +73,8 @@
     "lat": "48.864716",
     "lng": "2.349014",
     "state": "planned",
-    "region": "europe"
+    "region": "europe",
+    "icon": "fr"
   },
   {
     "text": "KJA",
@@ -76,8 +83,9 @@
     "city": "Madrid",
     "lat": "40.416775",
     "lng": "-3.703790",
-    "state": "planned",
-    "region": "europe"
+    "state": "active",
+    "region": "europe",
+    "icon": "es"
   },
   {
     "text": "KUL",
@@ -86,8 +94,9 @@
     "city": "Hong Kong",
     "lat": "22.302711",
     "lng": "114.177216",
-    "state": "planned",
-    "region": "asia & others"
+    "state": "active",
+    "region": "asia & others",
+    "icon": "cn"
   },
   {
     "text": "KUL",
@@ -97,7 +106,8 @@
     "lat": "35.652832",
     "lng": "139.839478",
     "state": "planned",
-    "region": "asia & others"
+    "region": "asia & others",
+    "icon": "jp"
   },
   {
     "text": "SIN",
@@ -107,7 +117,8 @@
     "lat": "1.2916666666667",
     "lng": "103.85",
     "state": "active",
-    "region": "asia & others"
+    "region": "asia & others",
+    "icon": "sg"
   },
   {
     "text": "DMK",
@@ -116,7 +127,8 @@
     "city": "Sydney",
     "lat": "-33.865143",
     "lng": "151.209900",
-    "state": "planned",
-    "region": "asia & others"
+    "state": "active",
+    "region": "asia & others",
+    "icon": "au"
   }
 ]

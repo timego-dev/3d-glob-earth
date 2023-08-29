@@ -42,13 +42,6 @@ export const REGION_COORDINATES = {
 
 export const CITIES = ['hk', 'sing', 'syd', 'tok']
 
-export const CITIES_LABELS = {
-  [CITIES[0]]: 'Hong Kong',
-  [CITIES[1]]: 'Singapore',
-  [CITIES[2]]: 'Sydney',
-  [CITIES[3]]: 'Tokyo',
-}
-
 export const CITIES_DETAILS = {
   [CITIES[0]]: {
     label: 'Hong Kong',
@@ -91,4 +84,98 @@ export const locationByRegion = locations.reduce(
   },
 )
 
-console.log(locationByRegion)
+export const flightMap = {
+  europe: [
+    { from: 'Madrid', to: 'Paris' },
+    { from: 'Madrid', to: 'Manchester' },
+    { from: 'Madrid', to: 'Amsterdam' },
+    { from: 'Madrid', to: 'Berlin' },
+
+    { from: 'Paris', to: 'Amsterdam' },
+    { from: 'Paris', to: 'Manchester' },
+    { from: 'Paris', to: 'Berlin' },
+    { from: 'Paris', to: 'Madrid' },
+
+    { from: 'Berlin', to: 'Paris' },
+    { from: 'Berlin', to: 'Manchester' },
+    { from: 'Berlin', to: 'Amsterdam' },
+    { from: 'Berlin', to: 'Madrid' },
+
+    { from: 'Amsterdam', to: 'Paris' },
+    { from: 'Amsterdam', to: 'Manchester' },
+    { from: 'Amsterdam', to: 'Berlin' },
+    { from: 'Amsterdam', to: 'Madrid' },
+  ],
+  usa: [
+    { from: 'New York', to: 'Washington D.C' },
+    { from: 'New York', to: 'California' },
+
+    { from: 'California', to: 'Washington D.C' },
+    { from: 'California', to: 'New York' },
+
+    { from: 'Washington D.C', to: 'New York' },
+    { from: 'Washington D.C', to: 'California' },
+  ],
+  'asia & others': [
+    { from: 'Hong Kong', to: 'Tokyo' },
+    { from: 'Hong Kong', to: 'Singapore' },
+    { from: 'Hong Kong', to: 'Sydney' },
+
+    { from: 'Tokyo', to: 'Hong Kong' },
+    { from: 'Tokyo', to: 'Singapore' },
+    { from: 'Tokyo', to: 'Sydney' },
+
+    { from: 'Singapore', to: 'Hong Kong' },
+    { from: 'Singapore', to: 'Tokyo' },
+    { from: 'Singapore', to: 'Sydney' },
+  ],
+}
+
+const locationHashmap = locations.reduce((rs, n) => {
+  rs[n.city] = n
+  return rs
+}, {})
+
+export const calculateFlightData = (region) => {
+  let flights = Object.values(flightMap).flat()
+  if (!region) {
+    return flights.map((fl) => ({
+      state:
+        locationHashmap[fl.from].state === 'active' &&
+        locationHashmap[fl.to].state === 'active'
+          ? 'active'
+          : 'planned',
+      startLat: locationHashmap[fl.from]?.lat,
+      startLng: locationHashmap[fl.from]?.lng,
+      endLat: locationHashmap[fl.to]?.lat,
+      endLng: locationHashmap[fl.to]?.lng,
+    }))
+  }
+}
+
+export const allLocations = [
+  {
+    label: 'Europe',
+    options: locationByRegion.europe.countries.map((cou) => ({
+      label: cou.city,
+      value: cou.city,
+      icon: cou.icon,
+    })),
+  },
+  {
+    label: 'USA',
+    options: locationByRegion.usa.countries.map((cou) => ({
+      label: cou.city,
+      value: cou.city,
+      icon: cou.icon,
+    })),
+  },
+  {
+    label: 'Asia & Others',
+    options: locationByRegion['asia & others'].countries.map((cou) => ({
+      label: cou.city,
+      value: cou.city,
+      icon: cou.icon,
+    })),
+  },
+]
