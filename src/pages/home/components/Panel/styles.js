@@ -18,11 +18,6 @@ export const panelStyle = {
     'linear-gradient(to bottom right, #18041e66, #00000026), ' +
     'linear-gradient(to bottom right, rgb(215 179 255 / 62%), rgba(216, 180, 253, 0))',
 
-  // backgroundImage:
-  //   'linear-gradient(to top, #2e29468a, #1d073854), ' +
-  //   'linear-gradient(to bottom right, #18041e66, #0000000f), ' +
-  //   'linear-gradient(to bottom right, rgb(215 179 255 / 52%), rgba(216, 180, 253, 0))',
-
   backgroundClip: 'padding-box, padding-box, border-box',
 
   css: {
@@ -35,12 +30,8 @@ export const regionButtonStyle = {
   h: '60px',
   fontFamily: 'Futura Round Bold',
   fontSize: '18px',
-  // border: '1px solid transparent',
   bg: 'rgb(255 255 255 / 10%)',
   border: '1px solid rgb(216 180 253 / 64%)',
-  // background:
-  //   'linear-gradient(#00000075, #00000075) padding-box, ' +
-  //   'linear-gradient(to right, rgb(216 180 253 / 58%), rgb(216 180 253 / 68%)) border-box',
   color: '#FAF6FE',
   w: '100%',
   _hover: {
@@ -73,4 +64,59 @@ export const changeLocCaret = {
   _hover: {
     bg: 'rgb(255 255 255 / 20%)',
   },
+}
+
+export const locationSelectStyle = {
+  control: (provided) => ({
+    ...provided,
+    w: '284px',
+    borderRadius: '8px',
+    lineHeight: '16px',
+
+    h: '36px',
+    minH: 'auto',
+    border: '1px solid rgb(216 180 253 / 50%) !important',
+    bg: 'rgb(255 255 255 / 10%)',
+    outline: 'none !important',
+  }),
+  valueContainer: (provided) => ({ ...provided, pl: '9px', pr: '9px' }),
+  menuList: (provided) => ({
+    ...provided,
+    border: '1px solid rgb(216 180 253 / 5%) !important',
+    background:
+      'linear-gradient(to top, rgb(215 179 255 / 15%), rgba(216, 180, 253, 0.1))',
+    pl: '12px',
+    pr: '12px',
+  }),
+  placeholder: (provided) => ({
+    ...provided,
+    color: 'white',
+    fontFamily: 'Futura Round Medium',
+    lineHeight: '16px',
+    fontSize: '16px',
+  }),
+  noOptionsMessage: (provided) => ({ ...provided, color: 'white' }),
+  multiValueRemove: (provided) => ({
+    ...provided,
+    color: 'rgba(255, 255, 255, 1)',
+  }),
+  multiValue: (provided) => ({
+    ...provided,
+    bg: 'rgba(232, 210, 255, 0.3)',
+    color: 'white',
+    fontSize: '16px',
+    fontFamily: 'Futura Round Medium',
+    borderRadius: '2px',
+    h: '19px',
+  }),
+  option: (provided, _state) => ({
+    ...provided,
+    color: 'white',
+    lineHeight: '24px',
+    backgroundColor: 'transparent',
+    borderRadius: '4px',
+    _hover: {
+      background: 'rgba(232, 210, 255, 0.3)',
+    },
+  }),
 }

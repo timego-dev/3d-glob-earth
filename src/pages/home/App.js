@@ -5,6 +5,7 @@ import {
   copyJson,
   DEFAULT_LOCATION,
   locationAlias,
+  locationByRegion,
   REGION_COORDINATES,
   REGION_LABELS,
   REGIONS,
@@ -35,58 +36,79 @@ function App() {
   })
   const requestRef = useRef(null)
 
+  // Zoom out
   useEffect(() => {
-    if (threeCanvas.current.scene && !location[locationAlias.reg]) {
-      const { x, y } = threeCanvas.current.camera.position
-
-      gsap.to(threeCanvas.current.camera.position, {
-        x,
-        y,
-        z: 400,
-        duration: 2,
-        ease: 'power2.out',
-      })
+    if (threeCanvas.current.scene) {
     }
+  }, [location])
 
-    if (threeCanvas.current.scene && location[locationAlias.reg]) {
-      let selectCountry = REGION_COORDINATES[location[locationAlias.reg]]
+  useEffect(() => {
+    if (threeCanvas.current.scene) {
+      // Zoom out
+      if (!location[locationAlias.reg]) {
+        const { x, y } = threeCanvas.current.camera.position
 
-      let startPos = threeCanvas.current.camera.position.clone()
-      let endPos = threeCanvas.current.Globe.getCoords(
-        selectCountry.lat,
-        selectCountry.lng,
-      )
-
-      let depthLevel = Object.values(location).filter((v) => !!v).length
-
-      let camDistance = threeCanvas.current.camera.position.length()
-      let maxCamDepth = 400 - depthLevel * 15
-
-      gsap.fromTo(
-        threeCanvas.current.camera.position,
-        {
-          x: startPos.x,
-          y: startPos.y,
-          z: startPos.z,
-        },
-        {
+        gsap.to(threeCanvas.current.camera.position, {
+          x,
+          y,
+          z: 400,
           duration: 2,
           ease: 'power2.out',
-          x: endPos.x,
-          y: endPos.y,
-          z: endPos.z,
+        })
+      }
 
-          onUpdate: () => {
-            if (camDistance > maxCamDepth) camDistance -= 1
+      // Zoom in
+      if (location[locationAlias.reg]) {
+        let coords = locationByRegion[location[locationAlias.reg]]
 
-            threeCanvas.current.camera.position
-              .normalize()
-              .multiplyScalar(camDistance)
+        if (location[locationAlias.ct]) {
+          coords = coords.countries.find(
+            (cou) => cou.city === location[locationAlias.ct],
+          )
+        }
 
-            threeCanvas.current.camera.lookAt(endPos)
+        let startPos = threeCanvas.current.camera.position.clone()
+        let endPos = threeCanvas.current.Globe.getCoords(coords.lat, coords.lng)
+
+        let depthLevel = [locationAlias.reg, locationAlias.ct].filter(
+          (v) => !!location[v],
+        ).length
+
+        let camDistance = threeCanvas.current.camera.position.length()
+        let maxCamDepth = 400 - depthLevel * 60
+
+        gsap.fromTo(
+          threeCanvas.current.camera.position,
+          {
+            x: startPos.x,
+            y: startPos.y,
+            z: startPos.z,
           },
-        },
-      )
+          {
+            duration: 2,
+            ease: 'power2.out',
+            x: endPos.x,
+            y: endPos.y,
+            z: endPos.z,
+
+            onUpdate: () => {
+              if (camDistance > maxCamDepth) {
+                camDistance -= 1
+              }
+
+              if (camDistance < maxCamDepth) {
+                camDistance += 1
+              }
+
+              threeCanvas.current.camera.position
+                .normalize()
+                .multiplyScalar(camDistance)
+
+              threeCanvas.current.camera.lookAt(endPos)
+            },
+          },
+        )
+      }
     }
   }, [location])
 
@@ -157,8 +179,8 @@ function App() {
     }
   }, [nav])
 
-  const hdChangeLocation = (key, value) => {
-    setLocation((prev) => ({ ...prev, [key]: value }))
+  const hdChangeLocation = (locationObj) => {
+    setLocation((prev) => ({ ...prev, ...locationObj }))
   }
 
   const switchRegion = useMemo(() => {
@@ -187,7 +209,10 @@ function App() {
         >
           <Button
             onClick={() =>
-              hdChangeLocation(locationAlias.reg, switchRegion.prev)
+              hdChangeLocation({
+                ...DEFAULT_LOCATION,
+                [locationAlias.reg]: switchRegion.prev,
+              })
             }
             {...changeLocCaret}
           >
@@ -196,7 +221,10 @@ function App() {
           </Button>
           <Button
             onClick={() =>
-              hdChangeLocation(locationAlias.reg, switchRegion.forw)
+              hdChangeLocation({
+                ...DEFAULT_LOCATION,
+                [locationAlias.reg]: switchRegion.forw,
+              })
             }
             {...changeLocCaret}
           >

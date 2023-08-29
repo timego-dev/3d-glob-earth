@@ -99,8 +99,8 @@ export function init() {
   controls.zoomSpeed = 1
   controls.autoRotate = false
 
-  controls.minPolarAngle = Math.PI / 3.5
-  controls.maxPolarAngle = Math.PI - Math.PI / 3
+  // controls.minPolarAngle = Math.PI / 3.5
+  // controls.maxPolarAngle = Math.PI - Math.PI / 3
 
   // window.addEventListener('resize', onWindowResize, false)
   // document.addEventListener('mousemove', onMouseMove)

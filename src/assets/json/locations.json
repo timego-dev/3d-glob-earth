@@ -4,6 +4,16 @@
     "size": 1.0,
     "country": "United States",
     "city": "New York",
+    "lat": "36.778259",
+    "lng": "-119.417931",
+    "state": "active",
+    "region": "usa"
+  },
+  {
+    "text": "FRU",
+    "size": 1.0,
+    "country": "United States",
+    "city": "New York",
     "lat": "42.85",
     "lng": "-74.00597",
     "state": "active",
@@ -18,46 +28,6 @@
     "lng": "-120.740135",
     "state": "active",
     "region": "usa"
-  },
-  {
-    "text": "TAS",
-    "size": 1.0,
-    "country": "Uzbekistan",
-    "city": "Tashkent",
-    "lat": "41.266666666667",
-    "lng": "69.366666666667",
-    "state": "planned",
-    "region": "asia & others"
-  },
-  {
-    "text": "ALA",
-    "size": 1.0,
-    "country": "Kazakhstan",
-    "city": "Almaty",
-    "lat": "43.35",
-    "lng": "75.033333333333",
-    "state": "planned",
-    "region": "asia & others"
-  },
-  {
-    "text": "ICN",
-    "size": 1.0,
-    "country": "South Korea",
-    "city": "Incheon",
-    "lat": "37.472222222222",
-    "lng": "126.60833333333",
-    "state": "planned",
-    "region": "asia & others"
-  },
-  {
-    "text": "KJA",
-    "size": 1.0,
-    "country": "Russia",
-    "city": "Krasnoyarsk",
-    "lat": "56.05",
-    "lng": "92.9",
-    "state": "planned",
-    "region": "europe"
   },
   {
     "text": "KJA",
@@ -80,22 +50,52 @@
     "region": "europe"
   },
   {
-    "text": "OVB",
+    "text": "KJA",
     "size": 1.0,
-    "country": "Russia",
-    "city": "Novosibirsk",
-    "lat": "55.033333333333",
-    "lng": "83",
+    "country": "Netherlands",
+    "city": "Amsterdam",
+    "lat": "52.377956",
+    "lng": "4.897070",
+    "state": "planned",
+    "region": "europe"
+  },
+  {
+    "text": "KJA",
+    "size": 1.0,
+    "country": "France",
+    "city": "Paris",
+    "lat": "48.864716",
+    "lng": "2.349014",
+    "state": "planned",
+    "region": "europe"
+  },
+  {
+    "text": "KJA",
+    "size": 1.0,
+    "country": "Spain",
+    "city": "Madrid",
+    "lat": "40.416775",
+    "lng": "-3.703790",
     "state": "planned",
     "region": "europe"
   },
   {
     "text": "KUL",
     "size": 1.0,
-    "country": "Malaysia",
-    "city": "Kuala-Lumpur",
-    "lat": "3.11666666666",
-    "lng": "101.7",
+    "country": "China",
+    "city": "Hong Kong",
+    "lat": "22.302711",
+    "lng": "114.177216",
+    "state": "planned",
+    "region": "asia & others"
+  },
+  {
+    "text": "KUL",
+    "size": 1.0,
+    "country": "Japan",
+    "city": "Tokyo",
+    "lat": "35.652832",
+    "lng": "139.839478",
     "state": "planned",
     "region": "asia & others"
   },
@@ -110,22 +110,12 @@
     "region": "asia & others"
   },
   {
-    "text": "DPS",
-    "size": 1.0,
-    "country": "Indonesia",
-    "city": "Denpasar",
-    "lat": "-8.75",
-    "lng": "115.16666666667",
-    "state": "active",
-    "region": "asia & others"
-  },
-  {
     "text": "DMK",
     "size": 1.0,
-    "country": "Thailand",
-    "city": "Bangkok",
-    "lat": "13.9255",
-    "lng": "100.5923",
+    "country": "Australia",
+    "city": "Sydney",
+    "lat": "-33.865143",
+    "lng": "151.209900",
     "state": "planned",
     "region": "asia & others"
   }

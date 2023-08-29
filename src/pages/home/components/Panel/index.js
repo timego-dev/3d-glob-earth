@@ -28,8 +28,6 @@ function Panel(props) {
     [props.location],
   )
 
-  console.log({ cityNotSelected, connectNotSelected })
-
   return (
     <VStack {...panelStyle}>
       {regionNotSelected && (

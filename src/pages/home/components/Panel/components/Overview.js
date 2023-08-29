@@ -54,7 +54,7 @@ function Overview(props) {
           <Button
             {...regionButtonStyle}
             key={reg}
-            onClick={() => props.onLocationChange(locationAlias.reg, reg)}
+            onClick={() => props.onLocationChange({ [locationAlias.reg]: reg })}
           >
             {REGION_LABELS[reg]?.label}
           </Button>

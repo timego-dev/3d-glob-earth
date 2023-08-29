@@ -1,3 +1,5 @@
+import locations from 'assets/json/locations.json'
+
 export const locationAlias = {
   reg: 'region',
   ct: 'city',
@@ -35,7 +37,7 @@ export const REGION_LABELS = {
 export const REGION_COORDINATES = {
   [REGIONS[0]]: { lat: 53.5775, lng: 23.106111 },
   [REGIONS[1]]: { lat: 47.116386, lng: -101.299591 },
-  [REGIONS[2]]: { lat: 34.047863, lng: 100.619655 },
+  [REGIONS[2]]: { lat: 1.2916666666667, lng: 103.85 },
 }
 
 export const CITIES = ['hk', 'sing', 'syd', 'tok']
@@ -51,18 +53,42 @@ export const CITIES_DETAILS = {
   [CITIES[0]]: {
     label: 'Hong Kong',
     desc: 'A short description that explains something about this city in correlation to inter.link',
-    cities: [{ label: 'Hong Kong', value: 'hk' }],
+    connections: [
+      { label: 'Tokyo', value: 'tokyo' },
+      { label: 'Singapore', value: 'sing' },
+      { label: 'Sydney', value: 'syd' },
+    ],
   },
   [CITIES[1]]: {
     label: 'Singapore',
     desc: 'A short description that explains something about this city in correlation to inter.link',
+    connections: [
+      { label: 'Tokyo', value: 'tokyo' },
+      { label: 'Singapore', value: 'sing' },
+      { label: 'Sydney', value: 'syd' },
+    ],
   },
   [CITIES[2]]: {
     label: 'Sydney',
     desc: 'A short description that explains something about this city in correlation to inter.link',
-  },
-  [CITIES[3]]: {
-    label: 'Tokyo',
-    desc: 'A short description that explains something about this city in correlation to inter.link',
+    connections: [
+      { label: 'Tokyo', value: 'tokyo' },
+      { label: 'Singapore', value: 'singapore' },
+      { label: 'Sydney', value: 'sydney' },
+    ],
   },
 }
+
+export const locationByRegion = locations.reduce(
+  (rs, n) => {
+    rs[n.region].countries.push(n)
+    return rs
+  },
+  {
+    europe: { lat: 53.5775, lng: 23.106111, countries: [] },
+    usa: { lat: 47.116386, lng: -101.299591, countries: [] },
+    'asia & others': { lat: 1.2916666666667, lng: 103.85, countries: [] },
+  },
+)
+
+console.log(locationByRegion)

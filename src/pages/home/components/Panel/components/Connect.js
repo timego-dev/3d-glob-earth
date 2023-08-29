@@ -1,16 +1,15 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { Button, Heading, Text, VStack, Wrap, WrapItem } from '@chakra-ui/react'
 import {
-  CITIES,
   CITIES_DETAILS,
-  CITIES_LABELS,
+  DEFAULT_LOCATION,
   locationAlias,
-  REGION_LABELS,
 } from '../../../constants/const'
-import { cityButtonStyle } from '../styles'
+import { cityButtonStyle, locationSelectStyle } from '../styles'
 import RadioIcon from '../../Circle'
 import { ArrowBackIcon } from '@chakra-ui/icons'
+import { Select } from 'chakra-react-select'
 
 Connect.propTypes = {
   onLocationChange: PropTypes.func,
@@ -18,7 +17,11 @@ Connect.propTypes = {
 }
 
 function Connect(props) {
-  console.log(props.location)
+  const detail = useMemo(
+    () => CITIES_DETAILS[props.location?.[locationAlias.ct]] || {},
+    [props.location],
+  )
+
   return (
     <>
       <VStack align='flex-start' justify='space-between' h='100%'>
@@ -31,7 +34,7 @@ function Connect(props) {
             mb='76px'
             color='white'
             variant='link'
-            onClick={() => props.onLocationChange(locationAlias.reg, '')}
+            onClick={() => props.onLocationChange({ ...DEFAULT_LOCATION })}
           >
             Back to overview
           </Button>
@@ -55,11 +58,11 @@ function Connect(props) {
             fontFamily='Futura Round Bold'
             textTransform='uppercase'
           >
-            {CITIES_DETAILS[props.location?.[locationAlias.ct]]?.label}
+            {detail?.label}
           </Heading>
 
           <Text mt='8px' fontSize='19px' lineHeight='23px' mb='60px'>
-            {CITIES_DETAILS[props.location?.[locationAlias.ct]]?.desc}
+            {detail?.desc}
           </Text>
 
           <VStack align='flex-start' mt='60px'>
@@ -71,27 +74,52 @@ function Connect(props) {
               Direct connections:
             </Text>
 
-            <Wrap spacing='12px' w='300px' mt='16px'>
-              {CITIES.map((c) => (
+            <Wrap spacing='12px' w='100%' mt='16px'>
+              {(detail?.connections || []).map((c) => (
                 <WrapItem key={c}>
                   <Button
                     {...cityButtonStyle}
-                    onClick={() => props.onLocationChange(locationAlias.ct, c)}
+                    // onClick={() => props.onLocationChange(locationAlias.ct, c)}
                   >
                     <RadioIcon />
-                    {CITIES_LABELS[c]}
+                    {c.label}
                   </Button>
                 </WrapItem>
               ))}
             </Wrap>
           </VStack>
+
+          <VStack align='flex-start' mt='44px'>
+            <Text
+              lineHeight='23px'
+              fontFamily='Futura Round Medium'
+              fontSize='19px'
+              mb='16px'
+            >
+              Connect me to:
+            </Text>
+
+            <Select
+              components={{
+                ClearIndicator: null,
+              }}
+              isMulti
+              useBasicStyles
+              name='colors'
+              classNamePrefix='chakra-react-select'
+              options={[
+                { label: 'Option', value: 'option' },
+                { label: 'Option', value: 'option' },
+                { label: 'Option', value: 'option' },
+              ]}
+              placeholder='Select a location'
+              closeMenuOnSelect={false}
+              chakraStyles={locationSelectStyle}
+            />
+          </VStack>
         </VStack>
 
-        <Button
-          color='white'
-          variant='link'
-          onClick={() => props.onLocationChange(locationAlias.reg, '')}
-        >
+        <Button color='white' variant='link'>
           Book IP transit now
         </Button>
       </VStack>
