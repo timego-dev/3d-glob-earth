@@ -18,7 +18,6 @@ import ThreeGlobe from 'three-globe'
 
 import locations from 'assets/json/locations.json'
 import countries from 'assets/globe-data-min.json'
-import travelHistory from 'assets/my-flights.json'
 import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer'
 import { calculateFlightData, copyJson } from './const'
 

@@ -3,11 +3,9 @@ import { Button, chakra, HStack } from '@chakra-ui/react'
 import Panel from './components/Panel'
 import {
   calculateFlightData,
-  copyJson,
   DEFAULT_LOCATION,
   locationAlias,
   locationByRegion,
-  REGION_COORDINATES,
   REGION_LABELS,
   REGIONS,
 } from './constants/const'
@@ -19,7 +17,6 @@ import {
 } from './constants/style'
 import RadioIcon from './components/Circle'
 import { init } from './constants/globe'
-import locations from 'assets/json/locations.json'
 import { changeLocCaret } from './components/Panel/styles'
 import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons'
 import gsap from 'gsap'
