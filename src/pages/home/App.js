@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Button, chakra, HStack } from '@chakra-ui/react'
+import { Button, chakra, Hide, HStack, useMediaQuery } from '@chakra-ui/react'
 import Panel from './components/Panel'
 import {
   calculateFlightData,
@@ -12,14 +12,13 @@ import {
 import {
   blurringBlueStyle,
   globStyle,
-  navbarStyle,
-  navButtonStyle,
+  mobileGlobStyle,
 } from './constants/style'
-import RadioIcon from './components/Circle'
 import { init } from './constants/globe'
 import { changeLocCaret } from './components/Panel/styles'
 import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons'
 import gsap from 'gsap'
+import FilterBar from './components/FilterBar'
 
 function App() {
   const [location, setLocation] = useState({ ...DEFAULT_LOCATION })
@@ -32,16 +31,18 @@ function App() {
     camera: null,
     controls: null,
   })
+
+  // Only use for show/hide on mobile
+  const [visibility, setVisibility] = useState({
+    showFilter: false,
+    showExploreButton: false,
+  })
+
+  const [isMobileResolution] = useMediaQuery(['(max-width: 375px)'])
   const requestRef = useRef(null)
 
-  // Zoom out
   useEffect(() => {
-    if (threeCanvas.current.scene) {
-    }
-  }, [location])
-
-  useEffect(() => {
-    if (threeCanvas.current.scene) {
+    if (!isMobileResolution && threeCanvas.current.scene) {
       // Zoom out
       if (!location[locationAlias.reg]) {
         const { x, y } = threeCanvas.current.camera.position
@@ -108,7 +109,7 @@ function App() {
         )
       }
     }
-  }, [location])
+  }, [location, isMobileResolution])
 
   const animate = useCallback((threeCanvas) => {
     if (!threeCanvas?.scene) return
@@ -128,13 +129,23 @@ function App() {
     const { camera, renderer, cssRenderer } = threeCanvas.current
 
     if (camera && renderer && cssRenderer) {
-      camera.aspect = window.innerWidth / window.innerHeight
+      const ratio = isMobileResolution
+        ? 375 / 572
+        : window.innerWidth / window.innerHeight
+
+      camera.aspect = ratio
       camera.updateProjectionMatrix()
 
-      renderer.setSize(window.innerWidth, window.innerHeight)
-      cssRenderer.setSize(window.innerWidth, window.innerHeight)
+      if (isMobileResolution) {
+        const width = window.innerWidth
+        renderer.setSize(width, width / ratio)
+        cssRenderer.setSize(width, width / ratio)
+      } else {
+        renderer.setSize(window.innerWidth, window.innerHeight)
+        cssRenderer.setSize(window.innerWidth, window.innerHeight)
+      }
     }
-  }, [])
+  }, [isMobileResolution])
 
   useEffect(() => {
     // Init the globe
@@ -149,6 +160,11 @@ function App() {
     )
 
     resizeWindow()
+
+    setVisibility({
+      showFilter: !isMobileResolution,
+      showExploreButton: isMobileResolution,
+    })
 
     // Add the resize event
     const controller = new AbortController()
@@ -168,7 +184,14 @@ function App() {
       const globPlace = document.getElementById('3d-glob')
       if (globPlace) globPlace.innerHTML = ''
     }
-  }, [animate, resizeWindow])
+  }, [animate, resizeWindow, isMobileResolution])
+
+  // useEffect(() => {
+  //   setVisibility({
+  //     showFilter: !isMobileResolution,
+  //     showExploreButton: isMobileResolution,
+  //   })
+  // }, [isMobileResolution])
 
   useEffect(() => {
     if (threeCanvas.current.scene) {
@@ -219,81 +242,74 @@ function App() {
     return { prev, forw }
   }, [location])
 
+  const showFilter = useMemo(() => {
+    return (
+      visibility.showFilter &&
+      (!location[locationAlias.reg] || !location[locationAlias.ct])
+    )
+  }, [visibility.showFilter, location])
+
+  const sphereStyle = useMemo(
+    () =>
+      !isMobileResolution
+        ? { ...globStyle }
+        : { ...globStyle, ...mobileGlobStyle },
+    [isMobileResolution],
+  )
+
   return (
     <div className='container'>
-      <chakra.div {...globStyle} id='3d-glob' />
-      <chakra.div {...blurringBlueStyle} />
+      <chakra.div {...sphereStyle} id='3d-glob' />
 
-      {location[locationAlias.reg] && (
-        <HStack
-          sizing={8}
-          position='absolute'
-          right='64px'
-          top='64px'
-          zIndex={20}
-        >
-          <Button
-            onClick={() =>
-              hdChangeLocation({
-                ...DEFAULT_LOCATION,
-                [locationAlias.reg]: switchRegion.prev,
-              })
-            }
-            {...changeLocCaret}
-          >
-            <ArrowBackIcon fontSize='20px' mr='8px' />
-            Go to {REGION_LABELS[switchRegion.prev]?.label}
-          </Button>
-          <Button
-            onClick={() =>
-              hdChangeLocation({
-                ...DEFAULT_LOCATION,
-                [locationAlias.reg]: switchRegion.forw,
-              })
-            }
-            {...changeLocCaret}
-          >
-            Go to {REGION_LABELS[switchRegion.forw]?.label}
-            <ArrowForwardIcon ml='8px' fontSize='20px' />
-          </Button>
-        </HStack>
-      )}
+      <Hide breakpoint='(max-width: 375px)'>
+        <chakra.div {...blurringBlueStyle} />
+      </Hide>
 
-      {location[locationAlias.ct] || (
-        <HStack {...navbarStyle}>
-          <Button
-            {...navButtonStyle}
-            bg={nav === 'all' ? 'rgba(81, 36, 117, 1)' : 'transparent'}
-            onClick={() => setNav('all')}
-            w='127px'
-            variant='ghost'
+      <Hide breakpoint='(max-width: 375px)'>
+        {location[locationAlias.reg] && (
+          <HStack
+            sizing={8}
+            position='absolute'
+            right='64px'
+            top='64px'
+            zIndex={20}
           >
-            All locations
-          </Button>
-          <Button
-            {...navButtonStyle}
-            bg={nav === 'active' ? 'rgba(81, 36, 117, 1)' : 'transparent'}
-            onClick={() => setNav('active')}
-            w='173px'
-            variant='ghost'
-          >
-            <RadioIcon checked />
-            Active locations
-          </Button>
-          <Button
-            {...navButtonStyle}
-            bg={nav === 'planned' ? 'rgba(81, 36, 117, 1)' : 'transparent'}
-            onClick={() => setNav('planned')}
-            w='185px'
-            variant='ghost'
-          >
-            <RadioIcon />
-            Planned locations
-          </Button>
-        </HStack>
-      )}
+            <Button
+              onClick={() =>
+                hdChangeLocation({
+                  ...DEFAULT_LOCATION,
+                  [locationAlias.reg]: switchRegion.prev,
+                })
+              }
+              {...changeLocCaret}
+            >
+              <ArrowBackIcon fontSize='20px' mr='8px' />
+              Go to {REGION_LABELS[switchRegion.prev]?.label}
+            </Button>
+            <Button
+              onClick={() =>
+                hdChangeLocation({
+                  ...DEFAULT_LOCATION,
+                  [locationAlias.reg]: switchRegion.forw,
+                })
+              }
+              {...changeLocCaret}
+            >
+              Go to {REGION_LABELS[switchRegion.forw]?.label}
+              <ArrowForwardIcon ml='8px' fontSize='20px' />
+            </Button>
+          </HStack>
+        )}
+      </Hide>
 
-      <Panel location={location} onLocationChange={hdChangeLocation} />
+      <FilterBar show={showFilter} state={nav} onChange={setNav} />
+
+      <Panel
+        visibility={visibility}
+        isMobile={isMobileResolution}
+        location={location}
+        onLocationChange={hdChangeLocation}
+      />
     </div>
   )
 }

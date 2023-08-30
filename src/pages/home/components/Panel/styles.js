@@ -25,6 +25,14 @@ export const panelStyle = {
   },
 }
 
+export const mobilePanelStyle = {
+  bgImage: 'none',
+  top: '32px',
+  left: '16px',
+  p: '0',
+  w: '343px',
+}
+
 export const regionButtonStyle = {
   borderRadius: '75px',
   h: '60px',

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { panelStyle } from './styles'
+import { mobilePanelStyle, panelStyle } from './styles'
 import { VStack } from '@chakra-ui/react'
 import Overview from './components/Overview'
 import { locationAlias } from '../../constants/const'
@@ -10,6 +10,8 @@ import Connect from './components/Connect'
 Panel.propTypes = {
   onLocationChange: PropTypes.func,
   location: PropTypes.object,
+  isMobile: PropTypes.bool,
+  visibility: PropTypes.object,
 }
 
 function Panel(props) {
@@ -28,10 +30,19 @@ function Panel(props) {
     [props.location],
   )
 
+  const panelMobileStyle = useMemo(
+    () => (props.isMobile ? { ...mobilePanelStyle } : {}),
+    [props.isMobile],
+  )
+
   return (
-    <VStack {...panelStyle}>
+    <VStack {...panelStyle} {...panelMobileStyle}>
       {regionNotSelected && (
-        <Overview onLocationChange={props.onLocationChange} />
+        <Overview
+          isMobile={props.isMobile}
+          showSelectRegion={props.visibility?.selectRegion}
+          onLocationChange={props.onLocationChange}
+        />
       )}
 
       {!regionNotSelected && cityNotSelected && (

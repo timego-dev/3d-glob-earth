@@ -4,6 +4,11 @@ export const globStyle = {
   right: '-400px',
 }
 
+export const mobileGlobStyle = {
+  right: '0',
+  bottom: '4vh',
+}
+
 export const blurringBlueStyle = {
   position: 'absolute',
   top: '20vh',
@@ -31,6 +36,7 @@ export const navbarStyle = {
 
 export const navButtonStyle = {
   _hover: { bg: 'rgba(81, 36, 117, 1)' },
+  p: '10px 24px',
   h: '31px',
   color: 'white',
   borderRadius: '40px',
