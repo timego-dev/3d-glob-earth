@@ -139,6 +139,15 @@ function App() {
   useEffect(() => {
     // Init the globe
     threeCanvas.current = { ...init() }
+
+    // Update the visibility of marker on rotating screen
+    threeCanvas.current.controls.addEventListener('change', () =>
+      threeCanvas.current.Globe.setPointOfView(
+        threeCanvas.current.camera.position,
+        threeCanvas.current.Globe.position,
+      ),
+    )
+
     resizeWindow()
 
     // Add the resize event
